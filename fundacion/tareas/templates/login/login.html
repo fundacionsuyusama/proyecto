@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}">
+</head>
+<body>
+  
+  <div class="wrapper">
+    <form class="login" method="post">
+      {% csrf_token %}
+      <p class="title">Iniciar Sesión</p>
+      <input type="text" placeholder="Usuario" name="username" autofocus/>
+      <i class="fa fa-user"></i>
+      <input type="password" placeholder="Contraseña" name="password" />
+      <i class="fa fa-key"></i>
+      {{error}}
+      <button class="botonLogin">
+        <i class="spinner"></i>
+        <span class="state">Ingresar</span>
+      </button>
+    </form>
+    </p>
+  </div>
+
+  
+</body>
+</html>
