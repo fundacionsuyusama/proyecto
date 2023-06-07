@@ -5,12 +5,16 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='user_login')
-def index(request):
-    return render(request, 'index.html')
+def crear_resultado(request):
+    return render(request, 'main/crear_resultado.html')
 
 @login_required(login_url='user_login')
 def home(request):
-    return render(request, 'home.html')
+    return render(request, 'main/home.html')
+
+@login_required(login_url='user_login')
+def index(request):
+    return render(request, 'index.html')
 
 def user_login(request):
     if request.user.is_authenticated:
