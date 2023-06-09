@@ -4,6 +4,54 @@
 
 {% block content %}
 
-<h1>Hola desde home</h1>
+<style>
+  .card {
+    box-shadow: 2px 2px 2px #CCC;
+    border: none;
+  }
+  .card:hover {
+    box-shadow: 4px 4px 4px #CCC;
+  }
+
+  /* color: #FFF; */
+  div h2 {
+    font-weight: bold;
+  }
+</style>
+
+<div class="container mt-3">
+  <h2 class="">Resultados</h2>
+</div>
+
+{% for resultado in resultados %}
+  {% if forloop.counter0|divisibleby:3 %}
+    <div class="container mt-3 mb-4 container_resultados">
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+  {% endif %}
+
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{ resultado.nombre }}</h5>
+        <p class="card-text">{{ resultado.fecha }}</p>
+        <p class="card-text">{{ resultado.texto }}</p>
+        <img src="https://live.staticflickr.com/65535/52868376900_d1e0ee21fe.jpg" class="card-img-top" alt="...">
+        <a href="#" class="btn btn-primary mt-4">Ir al resultado</a>
+      </div>
+    </div>
+  </div>
+
+  {% if forloop.counter|divisibleby:3 or forloop.last %}
+      </div>
+    </div>
+
+    {% if not forloop.last %}
+      <div class="mb-4"></div>
+    {% endif %}
+  {% endif %}
+
+  {% empty %}
+    <h1>No hay resultados registrados</h1>
+{% endfor %}
 
 {% endblock  %}

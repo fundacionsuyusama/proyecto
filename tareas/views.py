@@ -1,16 +1,28 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from .models import *
+from .forms import *
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 @login_required(login_url='user_login')
 def crear_resultado(request):
-    return render(request, 'main/crear_resultado.html')
+    fecha_actual = timezone.now()
+    if request.method == 'POST':
+        form = ResultadoForm(request.POST)
+        if form.is_valid():
+            resultado = form.save()
+            return redirect('home')
+    else:
+        form = ResultadoForm
+
+    return render(request, 'main/crear_resultado.html', {'form': form, 'fecha_actual': fecha_actual,})
 
 @login_required(login_url='user_login')
 def home(request):
-    return render(request, 'main/home.html')
+    resultados = Resultado.objects.all()
+    return render(request, 'main/home.html', {'resultados':resultados,})
 
 @login_required(login_url='user_login')
 def index(request):
