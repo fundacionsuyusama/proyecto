@@ -1,0 +1,13 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<p>¿Estás seguro de que deseas eliminar la tarea "{{ resultado.nombre }}"?</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Eliminar</button>
+</form>
+
+{% endblock  %}

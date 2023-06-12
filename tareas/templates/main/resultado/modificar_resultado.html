@@ -1,0 +1,52 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+  .contenedor-boton-resultados {
+    display: flex;
+    justify-content: center;
+  } 
+  .contenedor-fecha-resultado {
+    display: flex;
+    justify-content: end;
+  }
+  .form-label {
+    font-weight: bold;
+  }
+  #exampleFormControlTextarea1 {
+      height: 580px;
+    }
+  @media (max-width:1366px) {
+    #exampleFormControlTextarea1 {
+      height: 330px;
+    }
+  }
+
+</style>
+
+<div class="container mt-2">
+  <h2>Registro Resultados</h2>
+  <form method="post" class="mt-2 mb-2">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="exampleFormControlInput1" class="form-label">Nombre</label>
+      <input type="text" class="form-control" id="exampleFormControlInput1" name="nombre" value="{{ resultado.nombre }}">
+    </div>
+    <div class="mb-3">
+      <label for="exampleFormControlTextarea1" class="form-label">Texto del Resultado</label>
+      <textarea class="form-control" id="exampleFormControlTextarea1" name="texto" placeholder="Maximo 300 caracteres">{{ resultado.texto }}</textarea>
+    </div>
+    <div class="mb-3 contenedor-fecha-resultado">
+      <label for="">{{ fecha_actual }}</label>
+    </div>
+    <div class="contenedor-boton-resultados">
+      <button type="submit" class="btn btn-primary btn-lg">Guardar</button>
+    </div>
+  </form>
+</div>
+
+
+{% endblock  %}

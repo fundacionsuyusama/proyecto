@@ -35,8 +35,9 @@
         <h5 class="card-title">{{ resultado.nombre }}</h5>
         <p class="card-text">{{ resultado.fecha }}</p>
         <p class="card-text">{{ resultado.texto }}</p>
-        <img src="https://live.staticflickr.com/65535/52868376900_d1e0ee21fe.jpg" class="card-img-top" alt="...">
-        <a href="#" class="btn btn-primary mt-4">Ir al resultado</a>
+        <a href="{% url 'ver_actividad' resultado_id=resultado.id %}" class="btn btn-primary mt-4">Ir al resultado</a>
+        <a href="{% url 'modificar_resultado' resultado_id=resultado.id %}" class="btn btn-primary mt-4">Modificar resultado</a>
+        <a href="{% url 'eliminar_resultado' resultado_id=resultado.id %}" class="btn btn-primary mt-4">ELiminar resultado</a>
       </div>
     </div>
   </div>

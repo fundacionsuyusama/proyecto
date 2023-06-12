@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+  <h1>{{ resultado.nombre }}</h1>
+</div>
+{% for actividad in actividades %}
+<h1>{{ actividad.nombre }}</h1>
+
+{% empty %}
+<div class="container">
+  <h1>No hay actividades registradas</h1>
+</div>
+{% endfor %}
+
+{% endblock  %}

@@ -7,6 +7,50 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
 @login_required(login_url='user_login')
+def crear_actividad(request):
+    return render(request, 'main/crear_actividad.html')
+
+@login_required(login_url='user_login')
+def ver_actividad(request, resultado_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    actividades = resultado.actividad_set.all()
+    return render(request, 'main/ver_actividad.html', {'resultado': resultado, 'actividades': actividades,})
+
+@login_required(login_url='user_login')
+def eliminar_resultado(request, resultado_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    if request.method == 'POST':
+        resultado.delete()
+        return redirect('home')
+    return render(request, 'main/resultado/eliminar_resultado.html', {'resultado': resultado})
+
+
+@login_required(login_url='user_login')
+def modificar_resultado(request, resultado_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    if request.method == 'POST':
+        resultado.nombre = request.POST.get('nombre')
+        resultado.texto = request.POST.get('texto')
+        resultado.save()
+        return redirect('home')
+    return render(request, 'main/resultado/modificar_resultado.html', {'resultado': resultado})
+
+
+# @login_required(login_url='user_login')
+# def modificar_resultado(request, resultado_id):
+#     resultado = get_object_or_404(Resultado, id=resultado_id)
+#     if request.method == 'POST':
+#         form = ResultadoForm(request.POST, instance=resultado)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('home')
+#     else:
+#         form = ResultadoForm(instance=resultado)
+#     return render(request, 'main/resultado/modificar_resultado.html', {'form': form,})
+        
+    
+
+@login_required(login_url='user_login')
 def crear_resultado(request):
     fecha_actual = timezone.now()
     if request.method == 'POST':
@@ -17,12 +61,12 @@ def crear_resultado(request):
     else:
         form = ResultadoForm
 
-    return render(request, 'main/crear_resultado.html', {'form': form, 'fecha_actual': fecha_actual,})
+    return render(request, 'main/resultado/crear_resultado.html', {'form': form, 'fecha_actual': fecha_actual,})
 
 @login_required(login_url='user_login')
 def home(request):
     resultados = Resultado.objects.all()
-    return render(request, 'main/home.html', {'resultados':resultados,})
+    return render(request, 'main/resultado/home.html', {'resultados':resultados,})
 
 @login_required(login_url='user_login')
 def index(request):
@@ -30,7 +74,6 @@ def index(request):
 
 def user_login(request):
     if request.user.is_authenticated:
-        #redirige al usuario a la página correspondiente si ya ha iniciado sesión
         return redirect('home')
     if request.method == 'GET':
         return render(request, 'login/login.html', {'form': AuthenticationForm})
