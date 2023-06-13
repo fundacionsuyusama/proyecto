@@ -4,16 +4,34 @@
 
 {% block content %}
 
-<div class="container">
-  <h1>{{ resultado.nombre }}</h1>
+<style>
+  .custom-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .container h2 {
+    font-weight: bold;
+  }
+
+</style>
+
+<div class="container mt-3">
+  <h2>{{ resultado.nombre }}</h2>
 </div>
 {% for actividad in actividades %}
 <h1>{{ actividad.nombre }}</h1>
 
 {% empty %}
-<div class="container">
-  <h1>No hay actividades registradas</h1>
+
+<div class="container custom-center">
+  <div class="jumbotron text-center">
+      <h1 class="display-4">No hay actividades registradas</h1>
+      <p class="lead">No se ha encontrado ninguna actividad en este momento.</p>
+  </div>
 </div>
+
 {% endfor %}
 
 {% endblock  %}

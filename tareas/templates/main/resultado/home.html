@@ -26,6 +26,15 @@
   .boton-editar {
     margin-right: 5px;
   }
+  .custom-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .container h2 {
+    font-weight: bold;
+  }
 </style>
 
 <div class="container mt-3">
@@ -65,6 +74,12 @@
   {% empty %}
   <div class="container">
     <h1>No hay resultados registrados</h1>
+  </div>
+  <div class="container custom-center">
+    <div class="jumbotron text-center">
+        <h1 class="display-4">No hay resultados registrados</h1>
+        <p class="lead">No se ha encontrado ningun resultado en este momento.</p>
+    </div>
   </div>
 {% endfor %}
 
