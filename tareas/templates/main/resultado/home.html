@@ -12,8 +12,6 @@
   .card:hover {
     box-shadow: 4px 4px 4px #CCC;
   }
-
-  /* color: #FFF; */
   div h2 {
     font-weight: bold;
   }
@@ -25,7 +23,9 @@
   .card-title {
     flex-grow: 2;
   }
-
+  .boton-editar {
+    margin-right: 5px;
+  }
 </style>
 
 <div class="container mt-3">
@@ -63,7 +63,9 @@
   {% endif %}
 
   {% empty %}
+  <div class="container">
     <h1>No hay resultados registrados</h1>
+  </div>
 {% endfor %}
 
 {% endblock  %}
