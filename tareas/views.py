@@ -5,16 +5,59 @@ from .forms import *
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from datetime import datetime
+
 
 @login_required(login_url='user_login')
-def crear_actividad(request):
-    return render(request, 'main/crear_actividad.html')
+def eliminra_actividad(request, resultado_id, actividad_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    actividad = get_object_or_404(Actividad, id=actividad_id)
+    if request.method == 'POST':
+        actividad.delete()
+        return redirect('ver_actividad', resultado_id=resultado.id)
+    return render(request, 'main/actividad/eliminar_actividad.html', {'actividad': actividad, 'resultado': resultado,})
+
+@login_required(login_url='user_login')
+def editar_actividad(request, resultado_id, actividad_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    actividad = get_object_or_404(Actividad, id=actividad_id)
+
+    if request.method == 'POST':
+        actividad.nombre = request.POST.get('nombre')
+        actividad.contenido = request.POST.get('contenido')
+        fecha_vencimiento = request.POST.get('fecha_vencimiento')
+        actividad.fecha_vencimiento = timezone.make_aware(datetime.strptime(fecha_vencimiento, '%Y-%m-%dT%H:%M'))
+        actividad.save()
+        
+        return redirect('ver_actividad', resultado_id=resultado.id)
+    
+    return render(request, 'main/actividad/editar_actividad.html', {'actividad': actividad})
+
+@login_required(login_url='user_login')
+def crear_actividad(request, resultado_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+
+    if request.method == 'POST':
+        nombre = request.POST['nombre']
+        contenido = request.POST['contenido']
+        fecha_vencimiento = request.POST['fecha_vencimiento']
+
+        actividad = resultado.actividad_set.create(
+            nombre=nombre,
+            contenido=contenido,
+            fecha_vencimiento=fecha_vencimiento,
+            fecha_actual=timezone.now()
+        )
+        actividad.save()
+        return redirect('ver_actividad', resultado_id=resultado.id)
+    
+    return render(request, 'main/actividad/crear_actividad.html', {'resultado': resultado})
 
 @login_required(login_url='user_login')
 def ver_actividad(request, resultado_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
     actividades = resultado.actividad_set.all()
-    return render(request, 'main/ver_actividad.html', {'resultado': resultado, 'actividades': actividades,})
+    return render(request, 'main/actividad/ver_actividad.html', {'resultado': resultado, 'actividades': actividades,})
 
 @login_required(login_url='user_login')
 def eliminar_resultado(request, resultado_id):
@@ -23,7 +66,6 @@ def eliminar_resultado(request, resultado_id):
         resultado.delete()
         return redirect('home')
     return render(request, 'main/resultado/eliminar_resultado.html', {'resultado': resultado})
-
 
 @login_required(login_url='user_login')
 def modificar_resultado(request, resultado_id):
@@ -34,21 +76,6 @@ def modificar_resultado(request, resultado_id):
         resultado.save()
         return redirect('home')
     return render(request, 'main/resultado/modificar_resultado.html', {'resultado': resultado})
-
-
-# @login_required(login_url='user_login')
-# def modificar_resultado(request, resultado_id):
-#     resultado = get_object_or_404(Resultado, id=resultado_id)
-#     if request.method == 'POST':
-#         form = ResultadoForm(request.POST, instance=resultado)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('home')
-#     else:
-#         form = ResultadoForm(instance=resultado)
-#     return render(request, 'main/resultado/modificar_resultado.html', {'form': form,})
-        
-    
 
 @login_required(login_url='user_login')
 def crear_resultado(request):

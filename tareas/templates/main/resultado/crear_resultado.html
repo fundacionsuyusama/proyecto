@@ -32,17 +32,17 @@
     {% csrf_token %}
     <div class="mb-3">
       <label for="exampleFormControlInput1" class="form-label">Nombre</label>
-      <input type="text" class="form-control" id="exampleFormControlInput1" name="nombre">
+      <input type="text" class="form-control" id="exampleFormControlInput1" name="nombre" required>
     </div>
     <div class="mb-3">
       <label for="exampleFormControlTextarea1" class="form-label">Texto del Resultado</label>
-      <textarea class="form-control" id="exampleFormControlTextarea1" name="texto" placeholder="Maximo 300 caracteres"></textarea>
+      <textarea class="form-control" id="exampleFormControlTextarea1" name="texto" placeholder="Maximo 300 caracteres" required></textarea>
     </div>
     <div class="mb-3 contenedor-fecha-resultado">
       <label for="">{{ fecha_actual }}</label>
     </div>
     <div class="contenedor-boton-resultados">
-      <button type="submit" class="btn btn-primary btn-lg">Guardar</button>
+      <button type="submit" class="btn btn-success btn-lg">Guardar</button>
     </div>
   </form>
 </div>

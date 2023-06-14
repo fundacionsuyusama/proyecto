@@ -1,0 +1,31 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-2">
+  <h2>Editar Actividad</h2>
+  <form method="post" class="mt-2 mb-2">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="exampleFormControlInput1" class="form-label">Nombre actividad</label>
+      <input type="text" class="form-control" id="exampleFormControlInput1" name="nombre" value="{{ actividad.nombre }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="exampleFormControlTextarea1" class="form-label">Contenido de la actividad</label>
+      <textarea class="form-control" id="exampleFormControlTextarea1" name="contenido" placeholder="Maximo 300 caracteres" required>{{ actividad.contenido }}</textarea>
+    </div>
+    <div class="mb-3">
+      <label for="exampleFormControlTextarea1" class="form-label">Fecha de vencimiento</label>
+      <input class="form-control" type="datetime-local" name="fecha_vencimiento" id="id_fecha_vencimiento" value="{{ actividad.fecha_vencimiento|date:'Y-m-d\TH:i' }}" required>
+    </div>
+    <div class="contenedor-boton-resultados">
+      <button type="submit" class="btn btn-success btn-lg">Guardar</button>
+    </div>
+  </form>
+</div>
+
+
+
+{% endblock  %}

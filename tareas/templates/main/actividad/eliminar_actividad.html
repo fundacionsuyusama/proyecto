@@ -39,13 +39,13 @@
 
   <main>
     <div class="container">
-      <h1 class="text-center">Eliminar Resultado</h1>
+      <h1 class="text-center">Eliminar Actividad</h1>
       <div class="text-center form-box">
-        <p>¿Estás seguro de que deseas eliminar "{{ resultado.nombre }}"?</p>
+        <p>¿Estás seguro de que deseas eliminar "{{ actividad.nombre }}"?</p>
         <form method="post">
           {% csrf_token %}
           <button type="submit" class="btn btn-danger">Eliminar</button>
-          <a href="{% url 'home' %}" class="btn btn-secondary">Volver</a>
+          <a href="{% url 'ver_actividad' resultado_id=resultado.id %}" class="btn btn-secondary">Volver</a>
         </form>
       </div>
     </div>

@@ -1,0 +1,79 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+  .custom-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .container h2 {
+    font-weight: bold;
+  }
+  .contenedor-titulo-checkbox {
+    display: flex;
+  }
+  .contenedor-titulo {
+    display: flex;
+  }
+  .contenedor-titulo-checkbox h5, .contenedor-h2 {
+    flex-grow: 2;
+  }
+  .form-check-input {
+    background-color: #e5e5e5;
+  }
+  .card {
+    box-shadow: 2px 2px 2px #CCC;
+    border: none;
+  }
+  .card:hover {
+    box-shadow: 4px 4px 4px #CCC;
+  }
+  @media (max-width:414px) {
+    .contenedor-titulo {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<div class="container mt-3 contenedor-titulo">
+  <h2 class="contenedor-h2">{{ resultado.nombre }}</h2>
+  <a class="btn btn-dark" href="{% url 'crear_actividad' resultado_id=resultado.id %}">Crear Actividad</a>
+</div>
+
+{% for actividad in actividades %}
+
+<div class="container mt-3 mb-3 contenedor-body">
+  <div class="card mb-3" style="width: 18rem;">
+    <div class="card-body">
+      <div class="contenedor-titulo-checkbox">
+        <h5 class="card-title">{{ actividad.nombre }}</h5>
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+      </div>
+      <p class="card-text">{{ actividad.contenido }}</p>
+      <p class="card-text">{{ actividad.fecha_vencimiento }}</p> 
+      <a href="{% url 'editar_actividad' resultado_id=resultado.id actividad_id=actividad.id %}" role="button" class="btn btn-outline-primary">Editar</a>
+      <a href="{% url 'eliminra_actividad' resultado_id=resultado.id actividad_id=actividad.id %}" role="button" class="btn btn-outline-danger">Eliminar</a>
+    </div>
+  </div>
+</div>
+
+
+
+{% empty %}
+
+<div class="container custom-center">
+  <div class="jumbotron text-center">
+      <h1 class="display-4">No hay actividades registradas</h1>
+      <p class="lead">No se ha encontrado ninguna actividad en este momento.</p>
+      <a class="btn btn-primary btn-lg" href="{% url 'crear_actividad' resultado_id=resultado.id %}">Crear Actividad</a>
+  </div>
+</div>
+
+{% endfor %}
+
+{% endblock  %}
