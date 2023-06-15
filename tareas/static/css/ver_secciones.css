@@ -32,6 +32,10 @@
 .boton_crear {
   margin-right: 10px;
 }
+.contenedor_boton_guardar {
+  margin-bottom: 2%;
+}
+
 @media (max-width:414px) {
   .contenedor-titulo {
     flex-direction: column;
@@ -39,5 +43,22 @@
   .boton_crear {
     width: 100%;
     margin-bottom: 5px;
+  }
+}
+
+@media (max-width:767px) {
+  .contenedor_seccion_medio {
+    margin-bottom: 15px;
+  }
+  .contenedor_boton_guardar {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  .contenedor-titulo {
+    flex-direction: column;
+  }
+  .boton_crear {
+    margin-bottom: 1%;
+    width: 100%;
   }
 }

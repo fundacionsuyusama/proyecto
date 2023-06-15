@@ -18,13 +18,25 @@
   background-color: #4caf50;
   width: {{ porcentaje }}%;
 }
+
+.contenedor_porcentajet_valores {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.contenedor_porcentaje_valores h6:last-child {
+  {% if porcentaje == 100 %}
+    display: none;
+  {% endif %}
+}
   
 </style>
 
 <div class="container mt-3 contenedor-titulo">
   <h2 class="contenedor-h2">Actividad {{ actividad.nombre }}</h2>
-  <a class="btn btn-dark boton_crear" href="{% url 'crear_secciones' resultado_id=resultado.id actividad_id=actividad_id %}">Crear Seccion</a>
-  <a class="btn btn-dark" href="{% url 'ver_actividad' resultado_id=resultado.id %}">Volver</a>
+  <a class="btn btn-dark boton_crear" role="button" href="{% url 'crear_secciones' resultado_id=resultado.id actividad_id=actividad_id %}">Crear sección</a>
+  <a class="btn btn-dark" role="button" href="{% url 'ver_actividad' resultado_id=resultado.id %}">Volver</a>
 </div>
 
 <div class="container contenedor-secciones mt-3">
@@ -36,27 +48,51 @@
   <div class="progress-bar">
     <div class="progress" style="width: {{ porcentaje }}%"></div>
   </div>
+  <div class="contenedor_porcentajet_valores">
+    {% if porcentaje < 100 %}
+      <h6>{{ porcentaje }}%</h6>
+    {% endif %}
+    <h6>100%</h6>
+  </div>
 </div>
 
 <form method="post" action="{% url 'guardar_seccion' resultado_id=resultado_id actividad_id=actividad_id %}">
   {% csrf_token %}
   {% for seccion in secciones %}
-  <div class="container mt-3 mb-3 contenedor-body">
-    <div class="card mb-3" style="width: 18rem;">
-      <div class="card-body">
-        <div class="contenedor-titulo-checkbox">
-          <h5 class="card-title">{{ seccion.nombre }}</h5>
 
-          <input class="form-check-input" type="checkbox" id="flexCheckDefault" name="seccion_{{ seccion.id }}" value="{{ seccion.id }}" {% if seccion.is_completed %}checked{% endif %}>
-          <input class="form-check-input" type="hidden" id="flexCheckDefault" name="seccion_status_{{ seccion.id }}" value="{% if seccion.is_completed %}completed{% else %}incomplete{% endif %}">
-
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col-sm-6 mb-3 mb-sm-0">
+        <div class="card">
+          <div class="card-body">
+            <div class="contenedor-titulo-checkbox">
+              <h5 class="card-title">{{ seccion.nombre }}</h5>
+              <input class="form-check-input" type="checkbox" id="flexCheckDefault" name="seccion_{{ seccion.id }}" value="{{ seccion.id }}" {% if seccion.is_completed %}checked{% endif %}>
+              <input class="form-check-input" type="hidden" id="flexCheckDefault" name="seccion_status_{{ seccion.id }}" value="{% if seccion.is_completed %}completed{% else %}incomplete{% endif %}">
+            </div>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
         </div>
-        <p class="card-text">Contenido</p>
-        <a href="#" role="button" class="btn btn-outline-primary">Editar</a>
-        <a href="#" role="button" class="btn btn-outline-danger">Eliminar</a>
+      </div>
+      <div class="col-sm-3 contenedor_seccion_medio">
+        <div class="card">
+          <div class="card-body contenedor-secciones">
+            <h5 class="card-title">% de avance</h5>
+            <p class="card-text">100%</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="card">
+          <div class="card-body contenedor-secciones">
+            <h5 class="card-title">Avance ideal</h5>
+            <p class="card-text">{{ total_porcentaje }}%</p>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+</div>
 
   {% empty %}
 
@@ -69,7 +105,11 @@
 
   {% endfor %}
 
-  <button type="submit">Guardar</button>
+  <div class="container mt-3 contenedor-secciones">
+    <button type="submit" class="btn btn-success btn-lg contenedor_boton_guardar">Guardar</button>
+  </div>
+
+  
 </form>
 
 

@@ -32,14 +32,17 @@ def ver_secciones(request, resultado_id, actividad_id):
     actividad = get_object_or_404(Actividad, id=actividad_id)
     secciones = actividad.seccion_set.all()
     total_secciones = secciones.count()
+
     secciones_completadas = sum(seccion.is_completed for seccion in secciones)
 
     if total_secciones > 0:
         porcentaje = round((secciones_completadas / total_secciones) * 100)
+        total_porcentaje = round(100 / total_secciones)
     else:
         porcentaje = 0
+        total_porcentaje = 0
 
-    return render(request, 'main/secciones/ver_secciones.html', {'resultado': resultado, 'actividad': actividad, 'secciones': secciones, 'actividad_id': actividad_id, 'total_secciones': total_secciones, 'secciones_completadas': secciones_completadas, 'porcentaje': porcentaje, 'resultado_id': resultado_id,})
+    return render(request, 'main/secciones/ver_secciones.html', {'resultado': resultado, 'actividad': actividad, 'secciones': secciones, 'actividad_id': actividad_id, 'total_secciones': total_secciones, 'secciones_completadas': secciones_completadas, 'porcentaje': porcentaje, 'resultado_id': resultado_id, 'total_porcentaje': total_porcentaje,})
 
 @login_required(login_url='user_login')
 def eliminar_secciones(request, resultado_id, actividad_id, id):
