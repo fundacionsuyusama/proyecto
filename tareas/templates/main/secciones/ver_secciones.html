@@ -1,0 +1,100 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/ver_secciones.css' %}">
+
+<style>
+ .progress-bar {
+  width: 100%;
+  height: 20px;
+  background-color: #e5e5e5;
+}
+
+.progress {
+  height: 20px;
+  background-color: #4caf50;
+  width: {{ porcentaje }}%;
+}
+  
+</style>
+
+<div class="container mt-3 contenedor-titulo">
+  <h2 class="contenedor-h2">Actividad {{ actividad.nombre }}</h2>
+  <a class="btn btn-dark boton_crear" href="{% url 'crear_secciones' resultado_id=resultado.id actividad_id=actividad_id %}">Crear Seccion</a>
+  <a class="btn btn-dark" href="{% url 'ver_actividad' resultado_id=resultado.id %}">Volver</a>
+</div>
+
+<div class="container contenedor-secciones mt-3">
+  <h3 class="">Secciones</h3>
+</div>
+
+<div class="container">
+  <h5>Secciones totales: {{ total_secciones }}</h5>
+  <div class="progress-bar">
+    <div class="progress" style="width: {{ porcentaje }}%"></div>
+  </div>
+</div>
+
+<form method="post" action="{% url 'guardar_seccion' resultado_id=resultado_id actividad_id=actividad_id %}">
+  {% csrf_token %}
+  {% for seccion in secciones %}
+  <div class="container mt-3 mb-3 contenedor-body">
+    <div class="card mb-3" style="width: 18rem;">
+      <div class="card-body">
+        <div class="contenedor-titulo-checkbox">
+          <h5 class="card-title">{{ seccion.nombre }}</h5>
+
+          <input class="form-check-input" type="checkbox" id="flexCheckDefault" name="seccion_{{ seccion.id }}" value="{{ seccion.id }}" {% if seccion.is_completed %}checked{% endif %}>
+          <input class="form-check-input" type="hidden" id="flexCheckDefault" name="seccion_status_{{ seccion.id }}" value="{% if seccion.is_completed %}completed{% else %}incomplete{% endif %}">
+
+        </div>
+        <p class="card-text">Contenido</p>
+        <a href="#" role="button" class="btn btn-outline-primary">Editar</a>
+        <a href="#" role="button" class="btn btn-outline-danger">Eliminar</a>
+      </div>
+    </div>
+  </div>
+
+  {% empty %}
+
+  <div class="container custom-center">
+    <div class="jumbotron text-center">
+        <h1 class="display-4">No hay secciones registradas</h1>
+        <p class="lead">No se ha encontrado ninguna sección en este momento.</p>
+    </div>
+  </div>
+
+  {% endfor %}
+
+  <button type="submit">Guardar</button>
+</form>
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var checkboxes = document.querySelectorAll("input[type='checkbox']");
+
+    checkboxes.forEach(function(checkbox) {
+      checkbox.addEventListener("change", function() {
+        var statusInput = checkbox.parentNode.querySelector("input[type='hidden']");
+
+        if (checkbox.checked) {
+          statusInput.value = "completed";
+        } else {
+          statusInput.value = "incomplete";
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+{% endblock  %}

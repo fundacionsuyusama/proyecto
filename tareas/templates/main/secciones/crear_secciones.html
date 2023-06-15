@@ -1,0 +1,21 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-2">
+  <h2>crear sesiones</h2>
+  <form method="post" class="mt-2 mb-2">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="exampleFormControlInput1" class="form-label">Nombre Seccion</label>
+      <input type="text" class="form-control" id="exampleFormControlInput1" name="nombre" required>
+    </div>
+    <div class="contenedor-boton-resultados">
+      <button type="submit" class="btn btn-success btn-lg">Guardar</button>
+    </div>
+  </form>
+</div>
+
+{% endblock  %}

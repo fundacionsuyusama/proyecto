@@ -33,6 +33,9 @@
   .card:hover {
     box-shadow: 4px 4px 4px #CCC;
   }
+  .container-actividades {
+    text-align: center;
+  }
   @media (max-width:414px) {
     .contenedor-titulo {
       flex-direction: column;
@@ -43,6 +46,10 @@
 <div class="container mt-3 contenedor-titulo">
   <h2 class="contenedor-h2">{{ resultado.nombre }}</h2>
   <a class="btn btn-dark" href="{% url 'crear_actividad' resultado_id=resultado.id %}">Crear Actividad</a>
+</div>
+
+<div class="container container-actividades mt-3">
+  <h3 class="">Actividades</h2>
 </div>
 
 {% for actividad in actividades %}
@@ -56,13 +63,12 @@
       </div>
       <p class="card-text">{{ actividad.contenido }}</p>
       <p class="card-text">{{ actividad.fecha_vencimiento }}</p> 
+      <a href="{% url 'ver_secciones' resultado_id=resultado.id actividad_id=actividad.id %}" role="button" class="btn btn-outline-primary">Ver</a>
       <a href="{% url 'editar_actividad' resultado_id=resultado.id actividad_id=actividad.id %}" role="button" class="btn btn-outline-primary">Editar</a>
       <a href="{% url 'eliminra_actividad' resultado_id=resultado.id actividad_id=actividad.id %}" role="button" class="btn btn-outline-danger">Eliminar</a>
     </div>
   </div>
 </div>
-
-
 
 {% empty %}
 
