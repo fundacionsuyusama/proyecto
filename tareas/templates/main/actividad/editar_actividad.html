@@ -17,6 +17,10 @@
       <textarea class="form-control" id="exampleFormControlTextarea1" name="contenido" placeholder="Maximo 300 caracteres" required>{{ actividad.contenido }}</textarea>
     </div>
     <div class="mb-3">
+      <label for="exampleFormControlInput1" class="form-label">Fecha</label>
+      <input type="number" class="form-control" id="exampleFormControlInput1" name="fecha" value="{{ actividad.fecha }}" required>
+    </div>
+    <div class="mb-3">
       <label for="exampleFormControlTextarea1" class="form-label">Fecha de vencimiento</label>
       <input class="form-control" type="datetime-local" name="fecha_vencimiento" id="id_fecha_vencimiento" value="{{ actividad.fecha_vencimiento|date:'Y-m-d\TH:i' }}" required>
     </div>

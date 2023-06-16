@@ -5,7 +5,7 @@ from .forms import *
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 @login_required(login_url='user_login')
@@ -32,6 +32,18 @@ def ver_secciones(request, resultado_id, actividad_id):
     actividad = get_object_or_404(Actividad, id=actividad_id)
     secciones = actividad.seccion_set.all()
     total_secciones = secciones.count()
+    actividad_actual = actividad.fecha_vencimiento
+
+    fecha_actual = datetime.now().date()
+    diferencia_tiempo = actividad_actual.date() - fecha_actual
+    resultado_fecha = diferencia_tiempo / total_secciones
+    
+    #quede aquí
+    # if actividad_actual % 2 == 0:
+    #     resultado_fecha = round(actividad_actual / total_secciones)
+    # else:
+    #     resultado_fecha = round((actividad_actual / total_secciones), 2)
+        
 
     secciones_completadas = sum(seccion.is_completed for seccion in secciones)
 
@@ -42,7 +54,7 @@ def ver_secciones(request, resultado_id, actividad_id):
         porcentaje = 0
         total_porcentaje = 0
 
-    return render(request, 'main/secciones/ver_secciones.html', {'resultado': resultado, 'actividad': actividad, 'secciones': secciones, 'actividad_id': actividad_id, 'total_secciones': total_secciones, 'secciones_completadas': secciones_completadas, 'porcentaje': porcentaje, 'resultado_id': resultado_id, 'total_porcentaje': total_porcentaje,})
+    return render(request, 'main/secciones/ver_secciones.html', {'resultado': resultado, 'actividad': actividad, 'secciones': secciones, 'actividad_id': actividad_id, 'total_secciones': total_secciones, 'secciones_completadas': secciones_completadas, 'porcentaje': porcentaje, 'resultado_id': resultado_id, 'total_porcentaje': total_porcentaje, 'actividad_actual': actividad_actual, 'resultado_fecha': resultado_fecha, 'resultado_fecha': resultado_fecha})
 
 @login_required(login_url='user_login')
 def eliminar_secciones(request, resultado_id, actividad_id, id):
@@ -58,14 +70,17 @@ def eliminar_secciones(request, resultado_id, actividad_id, id):
 
 @login_required(login_url='user_login')
 def editar_secciones(request, resultado_id, actividad_id, id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
     seccion = get_object_or_404(Seccion, id=id)
 
     if request.method == 'POST':
         seccion.nombre = request.POST.get('nombre')
+        seccion.contenido = request.POST.get('contenido')
+        seccion.avance = request.POST.get('avance')
         seccion.save()
         return redirect('ver_secciones', resultado_id=resultado_id, actividad_id=actividad_id)
 
-    return render(request, 'main/secciones/editar_secciones.html', {'seccion': seccion,})
+    return render(request, 'main/secciones/editar_secciones.html', {'seccion': seccion, 'resultado': resultado, 'actividad_id': actividad_id})
 
 @login_required(login_url='user_login')
 def crear_secciones(request, resultado_id, actividad_id):
@@ -74,12 +89,18 @@ def crear_secciones(request, resultado_id, actividad_id):
 
     if request.method == 'POST':
         nombre = request.POST['nombre']
+        avance = request.POST['avance']
+        contenido = request.POST['contenido']
 
-        seccion = actividad.seccion_set.create(nombre=nombre)
+        seccion = actividad.seccion_set.create(
+            nombre=nombre,
+            avance=avance,
+            contenido=contenido
+            )
         seccion.save()
         return redirect('ver_secciones', resultado_id=resultado_id, actividad_id=actividad_id)
 
-    return render(request, 'main/secciones/crear_secciones.html', {'actividad': actividad,})
+    return render(request, 'main/secciones/crear_secciones.html', {'actividad': actividad, 'resultado': resultado, 'actividad_id': actividad_id})
 
 @login_required(login_url='user_login')
 def eliminra_actividad(request, resultado_id, actividad_id):
@@ -98,6 +119,7 @@ def editar_actividad(request, resultado_id, actividad_id):
     if request.method == 'POST':
         actividad.nombre = request.POST.get('nombre')
         actividad.contenido = request.POST.get('contenido')
+        actividad.fecha = request.POST.get('fecha')
         fecha_vencimiento = request.POST.get('fecha_vencimiento')
         actividad.fecha_vencimiento = timezone.make_aware(datetime.strptime(fecha_vencimiento, '%Y-%m-%dT%H:%M'))
         actividad.save()
@@ -114,10 +136,12 @@ def crear_actividad(request, resultado_id):
         nombre = request.POST['nombre']
         contenido = request.POST['contenido']
         fecha_vencimiento = request.POST['fecha_vencimiento']
+        fecha = request.POST['fecha']
 
         actividad = resultado.actividad_set.create(
             nombre=nombre,
             contenido=contenido,
+            fecha=fecha,
             fecha_vencimiento=fecha_vencimiento,
             fecha_actual=timezone.now()
         )
