@@ -1,0 +1,76 @@
+/* Estilos Generales */
+.container__header {
+  display: flex;
+}
+.container__header h2 {
+  flex-grow: 2;
+  font-weight: bold;
+}
+.container__header__all {
+  display: flex;
+}
+.container__header__all h2 {
+  flex-grow: 2;
+  font-weight: bold;
+}
+.container__header__all a:last-child {
+  margin-left: 15px;
+}
+.centrar {
+  text-align: center;
+}
+.container__header__button {
+  display: flex;
+  justify-content: space-between;
+}
+.container__buttons {
+  display: flex;
+}
+.container__buttons a:last-child {
+  margin-left: 10px;
+}
+
+@media (max-width:767px) {
+  .container__header {
+    flex-direction: column; 
+    text-align: center;
+  }
+  .container__header__all {
+    flex-direction: column;
+  }
+  .container__header__all a:last-child {
+    margin: 10px 0 0;
+  }
+  .container__width {
+    width: 100%;
+  }
+}
+@media (max-width:328px) {
+  .container__header__button {
+    flex-direction: column;
+  }
+  .container__buttons {
+    flex-direction: column;
+  }
+  .container__buttons a:last-child {
+    margin: 10px 0 10px 0;
+  }
+}
+
+.contenedor-boton-salir {
+  display: flex;
+  justify-content: start;
+  flex-grow: 2;
+}
+.card-title {
+  flex-grow: 2;
+}
+.boton-editar {
+  margin-right: 5px;
+}
+.custom-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

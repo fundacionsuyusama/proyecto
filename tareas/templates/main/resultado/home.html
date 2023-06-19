@@ -12,33 +12,12 @@
   .card:hover {
     box-shadow: 4px 4px 4px #CCC;
   }
-  div h2 {
-    font-weight: bold;
-  }
-  .contenedor-boton-salir {
-    display: flex;
-    justify-content: start;
-    flex-grow: 2;
-  }
-  .card-title {
-    flex-grow: 2;
-  }
-  .boton-editar {
-    margin-right: 5px;
-  }
-  .custom-center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  .container h2 {
-    font-weight: bold;
-  }
+
 </style>
 
-<div class="container mt-3">
-  <h2 class="">Resultados</h2>
+<div class="container mt-3 container__header">
+  <h2>Resultados</h2>
+  <a class="btn btn-dark boton__crear" href="{% url 'crear_resultado' %}" role="button">Crear resultado</a>
 </div>
 
 {% for resultado in resultados %}
@@ -46,6 +25,8 @@
     <div class="container mt-3 mb-4 container_resultados">
       <div class="row row-cols-1 row-cols-md-3 g-4">
   {% endif %}
+
+  <!-- Para poner la primera letra de cada párrafo en mayúscula, puedes usar el selector CSS :first-letter. Primero debes pasar el texto a minúscula y luego poner la primera letra como mayúscula utilizando el siguiente selector CSS: .let p { text-transform: lowercase; } .let p:first-letter { text-transform: uppercase; }2. -->
 
   <div class="col">
     <div class="card">

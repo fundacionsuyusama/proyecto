@@ -1,23 +1,5 @@
-.custom-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-.container h2 {
-  font-weight: bold;
-}
 .contenedor-titulo-checkbox {
   display: flex;
-}
-.contenedor-titulo {
-  display: flex;
-}
-.contenedor-titulo-checkbox h5, .contenedor-h2 {
-  flex-grow: 2;
-}
-.contenedor-secciones {
-  text-align: center;
 }
 .form-check-input {
   background-color: #e5e5e5;
@@ -29,36 +11,6 @@
 .card:hover {
   box-shadow: 4px 4px 4px #CCC;
 }
-.boton_crear {
-  margin-right: 10px;
-}
 .contenedor_boton_guardar {
   margin-bottom: 2%;
-}
-
-@media (max-width:414px) {
-  .contenedor-titulo {
-    flex-direction: column;
-  }
-  .boton_crear {
-    width: 100%;
-    margin-bottom: 5px;
-  }
-}
-
-@media (max-width:767px) {
-  .contenedor_seccion_medio {
-    margin-bottom: 15px;
-  }
-  .contenedor_boton_guardar {
-    width: 100%;
-    margin-bottom: 15px;
-  }
-  .contenedor-titulo {
-    flex-direction: column;
-  }
-  .boton_crear {
-    margin-bottom: 1%;
-    width: 100%;
-  }
 }

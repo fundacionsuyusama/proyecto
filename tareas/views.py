@@ -32,18 +32,16 @@ def ver_secciones(request, resultado_id, actividad_id):
     actividad = get_object_or_404(Actividad, id=actividad_id)
     secciones = actividad.seccion_set.all()
     total_secciones = secciones.count()
+
     actividad_actual = actividad.fecha_vencimiento
 
     fecha_actual = datetime.now().date()
     diferencia_tiempo = actividad_actual.date() - fecha_actual
-    resultado_fecha = diferencia_tiempo / total_secciones
-    
-    #quede aquí
-    # if actividad_actual % 2 == 0:
-    #     resultado_fecha = round(actividad_actual / total_secciones)
-    # else:
-    #     resultado_fecha = round((actividad_actual / total_secciones), 2)
-        
+
+    if total_secciones != 0:
+        resultado_fecha = diferencia_tiempo / total_secciones
+    else:
+        resultado_fecha = 0
 
     secciones_completadas = sum(seccion.is_completed for seccion in secciones)
 
@@ -54,7 +52,7 @@ def ver_secciones(request, resultado_id, actividad_id):
         porcentaje = 0
         total_porcentaje = 0
 
-    return render(request, 'main/secciones/ver_secciones.html', {'resultado': resultado, 'actividad': actividad, 'secciones': secciones, 'actividad_id': actividad_id, 'total_secciones': total_secciones, 'secciones_completadas': secciones_completadas, 'porcentaje': porcentaje, 'resultado_id': resultado_id, 'total_porcentaje': total_porcentaje, 'actividad_actual': actividad_actual, 'resultado_fecha': resultado_fecha, 'resultado_fecha': resultado_fecha})
+    return render(request, 'main/secciones/ver_secciones.html', {'resultado': resultado, 'actividad': actividad, 'secciones': secciones, 'actividad_id': actividad_id, 'total_secciones': total_secciones, 'secciones_completadas': secciones_completadas, 'porcentaje': porcentaje, 'resultado_id': resultado_id, 'total_porcentaje': total_porcentaje, 'actividad_actual': actividad_actual, 'resultado_fecha': resultado_fecha, 'resultado_fecha': resultado_fecha, 'nav': True,})
 
 @login_required(login_url='user_login')
 def eliminar_secciones(request, resultado_id, actividad_id, id):
