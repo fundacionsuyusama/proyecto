@@ -7,6 +7,112 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from datetime import datetime, timedelta
 
+@login_required(login_url='user_login')
+def eliminar_alternativa(request, resultado_id, actividad_id, dificultad_id, id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    alternativa = get_object_or_404(Alternativa, id=id)
+
+    if request.method == 'POST':
+        alternativa.delete()
+        return redirect('ver_actividad', resultado_id=resultado_id)
+    
+    return render(request, 'main/alternativa/eliminar_alternativa.html', {'alternativa': alternativa, 'resultado': resultado, 'resultado_id': resultado_id})
+
+@login_required(login_url='user_login')
+def editar_alternativa(request, resultado_id, actividad_id, dificultad_id, id):
+    alternativa = get_object_or_404(Alternativa, id=id)
+
+    if request.method == 'POST':
+        alternativa.contenido = request.POST.get('contenido')
+        alternativa.save()
+        return redirect('ver_actividad', resultado_id=resultado_id)
+
+    return render(request, 'main/alternativa/editar_alternativa.html', {'alternativa': alternativa})
+
+@login_required(login_url='user_login')
+def crear_alternativa(request, resultado_id, actividad_id, dificultad_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    actividad = get_object_or_404(Actividad, id=actividad_id)
+    dificultad = get_object_or_404(Dificultad, id=dificultad_id)
+
+    if request.method == 'POST':
+        contenido = request.POST['contenido']
+        alternativa = dificultad.alternativa_set.create(contenido=contenido)
+        alternativa.save()
+        return redirect('ver_actividad', resultado_id=resultado.id)
+    
+    return render(request, 'main/alternativa/crear_alternativa.html', {'actividad': actividad, 'resultado': resultado})
+
+@login_required(login_url='user_login')
+def editar_dificultad(request, resultado_id, actividad_id, id):
+    dificultad = get_object_or_404(Dificultad, id=id)
+
+    if request.method == 'POST':
+        dificultad.contenido = request.POST.get('contenido')
+        dificultad.save()
+        return redirect('ver_actividad', resultado_id=resultado_id,)
+    
+    return render(request, 'main/dificultad/editar_dificultad.html', {'dificultad': dificultad})
+
+@login_required(login_url='user_login')
+def crear_dificultad(request, resultado_id, actividad_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    actividad = get_object_or_404(Actividad, id=actividad_id)
+
+    if request.method == 'POST':
+        contenido = request.POST['contenido']
+        dificultad = actividad.dificultad_set.create(contenido=contenido)
+        dificultad.save()
+        return redirect('ver_actividad', resultado_id=resultado.id)
+    
+    return render(request, 'main/dificultad/crear_dificultad.html', {'actividad': actividad, 'resultado': resultado})
+
+@login_required(login_url='user_login')
+def eliminar_dificultad(request, resultado_id, actividad_id, id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    dificultad = get_object_or_404(Dificultad, id=id)
+
+    if request.method == 'POST':
+        dificultad.delete()
+        return redirect('ver_actividad', resultado_id=resultado_id)
+    
+    return render(request, 'main/dificultad/eliminar_dificultad.html', {'dificultad': dificultad, 'resultado':resultado, 'resultado_id': resultado_id})
+
+@login_required(login_url='user_login')
+def eliminar_avance(request, resultado_id, actividad_id, id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    avance = get_object_or_404(Avance, id=id)
+
+    if request.method == 'POST':
+        avance.delete()
+        return redirect('ver_actividad', resultado_id=resultado_id)
+    
+    return render(request, 'main/avance/eliminar_avance.html', {'avance': avance, 'resultado': resultado, ' resultado_id': resultado_id,})
+
+@login_required(login_url='user_login')
+def editar_avance(request, resultado_id, actividad_id, id):
+    avance = get_object_or_404(Avance, id=id)
+    
+    if request.method == 'POST':
+        avance.contenido = request.POST.get('contenido')
+        avance.save()
+        return redirect('ver_actividad', resultado_id=resultado_id,)
+    
+    return render(request, 'main/avance/editar_avance.html', {'avance': avance})
+
+@login_required(login_url='user_login')
+def crear_avance(request, resultado_id, actividad_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    actividad = get_object_or_404(Actividad, id=actividad_id)
+
+    if request.method == 'POST':
+        contenido = request.POST['contenido']
+        avance = actividad.avance_set.create(contenido=contenido)
+        avance.save()
+        return redirect('ver_actividad', resultado_id=resultado.id)
+    
+    return render(request, 'main/avance/crear_avance.html', {'actividad': actividad, 'resultado': resultado})
+
 
 @login_required(login_url='user_login')
 def guardar_seccion(request, resultado_id, actividad_id):
@@ -152,6 +258,7 @@ def crear_actividad(request, resultado_id):
 def ver_actividad(request, resultado_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
     actividades = resultado.actividad_set.all()
+
     return render(request, 'main/actividad/ver_actividad.html', {'resultado': resultado, 'actividades': actividades,})
 
 @login_required(login_url='user_login')

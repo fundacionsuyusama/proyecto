@@ -30,3 +30,25 @@ class Seccion(models.Model):
 
     def __str__(self):
         return self.nombre
+
+class Avance(models.Model):
+    actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE)
+    contenido = models.CharField(max_length=400)
+
+    def __str__(self):
+        return self.contenido
+    
+class Dificultad(models.Model):
+    actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE)
+    contenido = models.CharField(max_length=400)
+
+    def __str__(self):
+        return self.contenido
+
+class Alternativa(models.Model):
+    dificultad = models.ForeignKey(Dificultad, on_delete=models.CASCADE)
+    contenido = models.CharField(max_length=400)
+
+    def __str__(self):
+        return self.contenido
+    

@@ -1,0 +1,31 @@
+{% extends 'index.html' %} 
+
+{% load static %} 
+
+{% block content %}
+
+<style>
+  .formulario_area {
+    height: 170px;
+  }
+  .contenedor_h2 {
+    text-align: center;
+    font-weight: bold;
+  }
+</style>
+
+<div class="container mt-3">
+  <h2 class="contenedor_h2">Dificultad</h2>
+  <form method="post" class="mt-2 mb-2">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="exampleFormControlTextarea1" class="form-label">Crear dificultad</label>
+      <textarea class="form-control formulario_area" id="exampleFormControlTextarea1" name="contenido" placeholder="Maximo 300 caracteres" required></textarea>
+    </div>
+    <div class="d-grid gap-2 col-3 mx-auto contenedor_botones mb-3">
+      <button class="btn btn-primary" type="submit">Guardar</button>
+    </div>
+  </form>
+</div>
+
+{% endblock content %}

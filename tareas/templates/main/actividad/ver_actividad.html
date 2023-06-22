@@ -7,13 +7,19 @@
 <style>
   .card {
     box-shadow: 2px 2px 2px #CCC;
-    border: none;
   }
   .card:hover {
     box-shadow: 4px 4px 4px #CCC;
   }
   .container-actividades {
     text-align: center;
+  }
+  .container__header__alt {
+    display: flex;
+    flex-direction: column;
+  }
+  .btn-link {
+    text-decoration: none;
   }
 </style>
 
@@ -28,28 +34,73 @@
 </div>
 
 {% for actividad in actividades %}
-
-<div class="container mt-3 mb-3 contenedor-body">
-  <div class="card mb-3" style="width: 18rem;">
-    <div class="card-body">
-      <h5 class="card-title">{{ actividad.nombre }}</h5>
-      <p class="card-text">{{ actividad.contenido }}</p>
-      <a href="{% url 'ver_secciones' resultado_id=resultado.id actividad_id=actividad.id %}" role="button" class="btn btn-primary" id="boton_ver_todo">Ver</a>
-      <a href="{% url 'editar_actividad' resultado_id=resultado.id actividad_id=actividad.id %}" role="button" class="btn btn-primary">Editar</a>
-      <a href="{% url 'eliminra_actividad' resultado_id=resultado.id actividad_id=actividad.id %}" role="button" class="btn btn-danger">Eliminar</a>
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-lg-4 mb-3 mb-sm-0">
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="contenedor-titulo-checkbox">
+            <h5 class="card-title">{{ actividad.nombre }}</h5>
+          </div>
+          <p class="card-text">{{ actividad.contenido }}</p>
+          <p class="card-text">Fecha de vencimiento: {{ actividad.fecha_vencimiento }}</p>
+          <div class="container__header__button">
+            <div class="container__buttons">
+              <a href="{% url 'editar_actividad' resultado_id=resultado.id actividad_id=actividad.id %}" class="btn btn-primary" role="button">Editar</a>
+              <a href="{% url 'eliminra_actividad' resultado_id=resultado.id actividad_id=actividad.id %}" class="btn btn-danger" role="button">Eliminar</a>
+            </div>
+            <a href="{% url 'ver_secciones' resultado_id=resultado.id actividad_id=actividad.id %}" class="btn btn-success" role="button">Ver actividad</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-2 mb-3">
+      {% for avance in actividad.avance_set.all %}
+      <div class="card mb-2">
+        <div class="card-body centrar">
+          <h5>Avance Global</h5>
+          <p class="card-text">{{ avance.contenido }}</p>
+          <a href="{% url 'editar_avance' resultado_id=resultado.id actividad_id=actividad.id id=avance.id %}" role="button" class="btn btn-primary">Editar</a>
+          <a href="{% url 'eliminar_avance' resultado_id=resultado.id actividad_id=actividad.id id=avance.id %}" role="button" class="btn btn-danger">Eliminar</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="col-lg-6">
+      <div class="accordion" id="dificultadesAccordion">
+        {% for dificultad in actividad.dificultad_set.all %}
+        <div class="card mb-3">
+          <div class="card-header" id="dificultad{{ dificultad.id }}">
+            <h4 class="centrar">Dificultad</h4>
+            <p>{{ dificultad.contenido }}</p>
+            <a href="{% url 'editar_dificultad' resultado_id=resultado.id actividad_id=actividad.id id=dificultad.id %}" role="buton" class="btn btn-primary">Editar</a>
+            <a href="{% url 'eliminar_dificultad' resultado_id=resultado.id actividad_id=actividad.id id=dificultad.id %}" role="buton" class="btn btn-danger">Eliminar</a>
+            <a href="{% url 'crear_alternativa' resultado_id=resultado.id actividad_id=actividad.id dificultad_id=dificultad.id %}" role="button" class="btn btn-success">Crear Alternativa</a>
+          </div>
+          <div id="alternativas{{ dificultad.id }}" class="collapse show" aria-labelledby="dificultad{{ dificultad.id }}" data-bs-parent="#dificultadesAccordion">
+            <div class="card-body">
+              {% for alternativa in dificultad.alternativa_set.all %}
+              <h4 class="centrar">Alternativa</h4>
+              <p>{{ alternativa.contenido }}</p>
+              <a href="{% url 'editar_alternativa' resultado_id=resultado.id actividad_id=actividad.id dificultad_id=dificultad.id id=alternativa.id %}" role="buton" class="btn btn-primary">Editar</a>
+              <a href="{% url 'eliminar_alternativa' resultado_id=resultado.id actividad_id=actividad.id dificultad_id=dificultad.id id=alternativa.id %}" role="buton" class="btn btn-danger">Eliminar</a>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
 </div>
+<a href="{% url 'crear_avance' resultado_id=resultado.id actividad_id=actividad.id %}" role="button" class="btn btn-primary">Crear Avance</a>
 
-{% empty %}
+<a href="{% url 'crear_dificultad' resultado_id=resultado.id actividad_id=actividad.id %}" role="button" class="btn btn-primary">Crear Dificultad</a>
 
-<div class="container custom-center">
-  <div class="jumbotron text-center">
-      <h1 class="display-4">No hay actividades registradas</h1>
-      <p class="lead">No se ha encontrado ninguna actividad en este momento.</p>
-  </div>
-</div>
+
+
 
 {% endfor %}
+
 
 {% endblock  %}
