@@ -22,6 +22,7 @@
     </div>
     <div class="mb-3">
       <label for="exampleFormControlTextarea1" class="form-label">Fecha de vencimiento</label>
+      <label for="exampleFormControlTextarea1" class="form-label"></label>
       <input class="form-control" type="datetime-local" name="fecha_vencimiento" id="id_fecha_vencimiento" value="{{ actividad.fecha_vencimiento|date:'Y-m-d\TH:i' }}" required>
     </div>
     <div class="contenedor-boton-resultados">
@@ -29,7 +30,5 @@
     </div>
   </form>
 </div>
-
-
 
 {% endblock  %}

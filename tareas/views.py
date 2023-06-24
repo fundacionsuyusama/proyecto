@@ -132,33 +132,81 @@ def guardar_seccion(request, resultado_id, actividad_id):
 
     return redirect('ver_secciones', resultado_id=resultado_id, actividad_id=actividad_id)
 
+def resta_fechas(actividad_id):
+    actividad = get_object_or_404(Actividad, id=actividad_id)
+    actividad_actual = actividad.fecha_vencimiento
+    current_datetime = timezone.now()
+    tiempo_real =  actividad_actual - current_datetime
+
+def resta_numero(num1, num2):
+    num1 = 2
+    num2 = 2
+    return num1 + num2
+
 @login_required(login_url='user_login')
 def ver_secciones(request, resultado_id, actividad_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
     actividad = get_object_or_404(Actividad, id=actividad_id)
     secciones = actividad.seccion_set.all()
     total_secciones = secciones.count()
+    secciones_terminadas = Seccion.objects.filter(actividad=actividad)
 
     actividad_actual = actividad.fecha_vencimiento
 
-    fecha_actual = datetime.now().date()
-    diferencia_tiempo = actividad_actual.date() - fecha_actual
+    current_datetime = timezone.now()
+    tiempo_real =  actividad_actual - current_datetime
 
-    if total_secciones != 0:
-        resultado_fecha = diferencia_tiempo / total_secciones
+    horas_restantes = tiempo_real.seconds // 3600
+    minutos_restantes = (tiempo_real.seconds % 3600) // 60
+
+    i = 0
+
+    if tiempo_real.days == 0:
+        if horas_restantes == 0 and minutos_restantes == 0:
+            mensaje = "No queda tiempo"
+        elif horas_restantes == 0:
+            if minutos_restantes == 1:
+                mensaje = "1 minuto"
+            else:
+                mensaje = f"{minutos_restantes} minutos"
+        elif minutos_restantes == 0:
+            mensaje = f"{horas_restantes} horas"
+        elif horas_restantes == 1:
+            mensaje = f"1 hora y {minutos_restantes} minutos"
+        else:
+            if minutos_restantes == 1:
+                mensaje = f"{horas_restantes} horas y 1 minuto"
+            else:
+                mensaje = f"{horas_restantes} horas y {minutos_restantes} minutos"
     else:
-        resultado_fecha = 0
+        mensaje = 0;
+
 
     secciones_completadas = sum(seccion.is_completed for seccion in secciones)
+
 
     if total_secciones > 0:
         porcentaje = round((secciones_completadas / total_secciones) * 100)
         total_porcentaje = round(100 / total_secciones)
+
+        dias_restantes = tiempo_real.days
+    
+        divisor = dias_restantes // total_secciones
+        residuo = divisor + (dias_restantes % total_secciones)
+
+        variables = [divisor] * total_secciones
+
+        for i in range(dias_restantes % total_secciones):
+            variables[i] += 1
+
     else:
         porcentaje = 0
         total_porcentaje = 0
+        divisor = 0
+        variables = 0
 
-    return render(request, 'main/secciones/ver_secciones.html', {'resultado': resultado, 'actividad': actividad, 'secciones': secciones, 'actividad_id': actividad_id, 'total_secciones': total_secciones, 'secciones_completadas': secciones_completadas, 'porcentaje': porcentaje, 'resultado_id': resultado_id, 'total_porcentaje': total_porcentaje, 'actividad_actual': actividad_actual, 'resultado_fecha': resultado_fecha, 'resultado_fecha': resultado_fecha, 'nav': True,})
+
+    return render(request, 'main/secciones/ver_secciones.html', {'resultado': resultado, 'actividad': actividad, 'secciones': secciones, 'actividad_id': actividad_id, 'total_secciones': total_secciones, 'secciones_completadas': secciones_completadas, 'porcentaje': porcentaje, 'resultado_id': resultado_id, 'total_porcentaje': total_porcentaje, 'actividad_actual': actividad_actual, 'tiempo_real': tiempo_real, 'mensaje': mensaje, 'variables': variables, 'current_datetime': current_datetime, 'secciones_terminadas': secciones_terminadas, 'horas_restantes': horas_restantes})
 
 @login_required(login_url='user_login')
 def eliminar_secciones(request, resultado_id, actividad_id, id):
@@ -259,7 +307,10 @@ def ver_actividad(request, resultado_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
     actividades = resultado.actividad_set.all()
 
-    return render(request, 'main/actividad/ver_actividad.html', {'resultado': resultado, 'actividades': actividades,})
+    current_datetime = timezone.now()
+
+
+    return render(request, 'main/actividad/ver_actividad.html', {'resultado': resultado, 'actividades': actividades, 'current_datetime': current_datetime,})
 
 @login_required(login_url='user_login')
 def eliminar_resultado(request, resultado_id):

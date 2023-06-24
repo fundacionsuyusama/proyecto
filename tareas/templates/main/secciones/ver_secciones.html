@@ -30,6 +30,11 @@
     display: none;
   {% endif %}
 }
+@media (max-width:767px) {
+  .fecha__vencimiento {
+    font-size: 14px;
+  }
+}
   
 </style>
 
@@ -45,9 +50,49 @@
 
 
 {% if total_secciones >= 1 %}
-<div class="container mt-2">
-  <h5>Tiempo: {{ actividad_actual }}</h5>
-  <h5 class="mb-3">Total: {{ total_secciones }}</h5>
+<div class="container mt-2" >
+  <div class="card 
+  {% for seccion in secciones_terminadas  %}
+    {% if actividad.fecha_vencimiento > current_datetime and tiempo_real.days == 0 %}
+      {% if seccion.is_completed == True %}
+        text-bg-primary
+      {% else %}
+        text-bg-warning    
+      {% endif %}
+    {% endif %}
+  
+    {% if actividad.fecha_vencimiento < current_datetime %}
+      {% if seccion.is_completed %}
+        text-bg-primary
+      {% else %}
+        text-bg-danger  
+      {% endif %}
+    {% endif %}
+  
+    {% if actividad.fecha_vencimiento > current_datetime %}
+      text-bg-primary
+    {% endif %}    
+  {% endfor %}
+
+  mt-3 mb-4">
+    <div class="card-body">
+      {% if tiempo_real.days == 0 %}
+      <h5 class="fecha__vencimiento">Fecha de vencimiento:  {{ actividad.fecha_vencimiento }}</h5>
+      <h5 class="fecha__vencimiento">Vence en: {{mensaje}}</h5>
+      {% elif tiempo_real.days == 1 %}
+      <h5>Fecha de vencimiento:  {{ actividad.fecha_vencimiento }}</h5>
+      <h5>Vence en: {{tiempo_real.days}} día</h5>
+      {% elif tiempo_real.days <= 1 %}
+      <h5>Fecha de vencimiento:  {{ actividad.fecha_vencimiento }}</h5>
+      <h5>No queda tiempo</h5>
+      {% else %}
+      <h5>Fecha de vencimiento:  {{ actividad.fecha_vencimiento }}</h5>
+      <h5>Vence en: {{tiempo_real.days}} días</h5>
+      {% endif %}
+    </div>
+  </div>
+  
+
   <div class="progress-bar">
     <div class="progress" style="width: {{ porcentaje }}%"></div>
   </div>
@@ -57,6 +102,37 @@
     {% endif %}
     <h6>100%</h6>
   </div>
+
+  
+  {% for variable in variables %}
+  {% if forloop.counter0|divisibleby:5 %}
+    <div class="mt-3 mb-4 container_resultados">
+      <div class="row row-cols-1 row-cols-md-5 g-4">
+  {% endif %}
+  <div class="col">
+    <div class="card">
+      <div class="card-body centrar">
+        <h5 class="card-title">Sección {{ forloop.counter }}</h5>
+        {% if variable == 1 %}
+        <p class="card-text">{{ variable }} día</p>
+        {% elif variable <= 1 %}
+        <p class="card-text">0 días</p>
+        {% else %}
+        <p class="card-text">{{ variable }} días</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% if forloop.counter|divisibleby:5 or forloop.last %}
+      </div>
+    </div>
+    {% if not forloop.last %}
+      <div class="mb-4"></div>
+    {% endif %}
+  {% endif %}
+  {% endfor %}
+
+    
 </div>
 {% endif %}
 
@@ -108,7 +184,7 @@
         <div class="card">
           <div class="card-body centrar">
             <h5 class="card-title">Fecha</h5>
-            <p class="card-text">1 de junio 2023</p>
+            <p class="card-text">{{ seccion.is_completed }}</p>
           </div>
         </div>
       </div>
