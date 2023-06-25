@@ -5,9 +5,6 @@
 {% block content %}
 
 <style>
-  .formulario_area {
-    height: 170px;
-  }
   .contenedor_h2 {
     text-align: center;
     font-weight: bold;
@@ -24,6 +21,7 @@
     </div>
     <div class="d-grid gap-2 col-3 mx-auto contenedor_botones mb-3">
       <button class="btn btn-primary" type="submit">Guardar</button>
+      <a href="{% url 'ver_actividad' resultado_id=resultado.id %}" role="button" class="btn btn-secondary">Volver</a>
     </div>
   </form>
 </div>

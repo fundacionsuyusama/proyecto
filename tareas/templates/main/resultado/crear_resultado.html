@@ -17,13 +17,9 @@
     font-weight: bold;
   }
   #exampleFormControlTextarea1 {
-      height: 580px;
-    }
-  @media (max-width:1366px) {
-    #exampleFormControlTextarea1 {
-      height: 330px;
-    }
+    height: 170px;
   }
+
 </style>
 
 <div class="container mt-2">
@@ -41,11 +37,11 @@
     <div class="mb-3 contenedor-fecha-resultado">
       <label for="">{{ fecha_actual }}</label>
     </div>
-    <div class="contenedor-boton-resultados">
-      <button type="submit" class="btn btn-success btn-lg">Guardar</button>
+    <div class="d-grid gap-2 col-3 mx-auto contenedor_botones mb-3">
+      <button type="submit" class="btn btn-primary">Guardar</button>
+      <a href="{% url 'home' %}" role="button" class="btn btn-secondary">Volver</a>
     </div>
   </form>
 </div>
 
 {% endblock  %}
-

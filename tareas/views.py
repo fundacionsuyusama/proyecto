@@ -21,13 +21,14 @@ def eliminar_alternativa(request, resultado_id, actividad_id, dificultad_id, id)
 @login_required(login_url='user_login')
 def editar_alternativa(request, resultado_id, actividad_id, dificultad_id, id):
     alternativa = get_object_or_404(Alternativa, id=id)
+    resultado = get_object_or_404(Resultado, id=resultado_id)
 
     if request.method == 'POST':
         alternativa.contenido = request.POST.get('contenido')
         alternativa.save()
         return redirect('ver_actividad', resultado_id=resultado_id)
 
-    return render(request, 'main/alternativa/editar_alternativa.html', {'alternativa': alternativa})
+    return render(request, 'main/alternativa/editar_alternativa.html', {'alternativa': alternativa, 'resultado': resultado})
 
 @login_required(login_url='user_login')
 def crear_alternativa(request, resultado_id, actividad_id, dificultad_id):
@@ -46,13 +47,14 @@ def crear_alternativa(request, resultado_id, actividad_id, dificultad_id):
 @login_required(login_url='user_login')
 def editar_dificultad(request, resultado_id, actividad_id, id):
     dificultad = get_object_or_404(Dificultad, id=id)
+    resultado = get_object_or_404(Resultado, id=resultado_id)
 
     if request.method == 'POST':
         dificultad.contenido = request.POST.get('contenido')
         dificultad.save()
         return redirect('ver_actividad', resultado_id=resultado_id,)
     
-    return render(request, 'main/dificultad/editar_dificultad.html', {'dificultad': dificultad})
+    return render(request, 'main/dificultad/editar_dificultad.html', {'dificultad': dificultad, 'resultado': resultado})
 
 @login_required(login_url='user_login')
 def crear_dificultad(request, resultado_id, actividad_id):
@@ -91,6 +93,7 @@ def eliminar_avance(request, resultado_id, actividad_id, id):
 
 @login_required(login_url='user_login')
 def editar_avance(request, resultado_id, actividad_id, id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
     avance = get_object_or_404(Avance, id=id)
     
     if request.method == 'POST':
@@ -98,7 +101,7 @@ def editar_avance(request, resultado_id, actividad_id, id):
         avance.save()
         return redirect('ver_actividad', resultado_id=resultado_id,)
     
-    return render(request, 'main/avance/editar_avance.html', {'avance': avance})
+    return render(request, 'main/avance/editar_avance.html', {'avance': avance, 'resultado': resultado})
 
 @login_required(login_url='user_login')
 def crear_avance(request, resultado_id, actividad_id):
@@ -273,14 +276,13 @@ def editar_actividad(request, resultado_id, actividad_id):
     if request.method == 'POST':
         actividad.nombre = request.POST.get('nombre')
         actividad.contenido = request.POST.get('contenido')
-        actividad.fecha = request.POST.get('fecha')
         fecha_vencimiento = request.POST.get('fecha_vencimiento')
         actividad.fecha_vencimiento = timezone.make_aware(datetime.strptime(fecha_vencimiento, '%Y-%m-%dT%H:%M'))
         actividad.save()
         
         return redirect('ver_actividad', resultado_id=resultado.id)
     
-    return render(request, 'main/actividad/editar_actividad.html', {'actividad': actividad})
+    return render(request, 'main/actividad/editar_actividad.html', {'actividad': actividad, 'resultado': resultado})
 
 @login_required(login_url='user_login')
 def crear_actividad(request, resultado_id):
@@ -290,12 +292,10 @@ def crear_actividad(request, resultado_id):
         nombre = request.POST['nombre']
         contenido = request.POST['contenido']
         fecha_vencimiento = request.POST['fecha_vencimiento']
-        fecha = request.POST['fecha']
 
         actividad = resultado.actividad_set.create(
             nombre=nombre,
             contenido=contenido,
-            fecha=fecha,
             fecha_vencimiento=fecha_vencimiento,
             fecha_actual=timezone.now()
         )

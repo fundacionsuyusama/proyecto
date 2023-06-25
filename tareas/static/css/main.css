@@ -19,6 +19,14 @@
 .centrar {
   text-align: center;
 }
+.centrar__bold {
+  text-align: center;
+  font-weight: bold;
+  font-size: 3rem;
+}
+.bold {
+  font-weight: bold;
+}
 .container__header__button {
   display: flex;
   justify-content: space-between;
@@ -29,7 +37,47 @@
 .container__buttons a:last-child {
   margin-left: 10px;
 }
-
+.boton__grande {
+  height: 3.5rem;
+  width: 14rem;
+  font-size: 20px;
+}
+.formulario_area {
+  height: 170px;
+}
+.imagen__editar {
+  width: 20px;
+  height: 20px;
+  margin-right: 3px;
+}
+.imagen__editar:hover {
+  opacity: 0.5;
+}
+.boton__enviar {
+  width: 80px;
+}
+.enviar {
+  width: 100%;
+  padding: 12px 10px 10px 12px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background-color: orange;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 1s all;
+  text-align: center;
+}
+.contenedor-boton-resultados {
+  display: flex;
+  justify-content: center;
+} 
+.enviar:hover {
+  background-color: darkorange;
+  transform: scale(0.95);
+}
 @media (max-width:767px) {
   .container__header {
     flex-direction: column; 
@@ -42,6 +90,9 @@
     margin: 10px 0 0;
   }
   .container__width {
+    width: 100%;
+  }
+  .boton__grande {
     width: 100%;
   }
 }
@@ -61,6 +112,17 @@
   display: flex;
   justify-content: start;
   flex-grow: 2;
+}
+.contenedor-boton-avance {
+  display: flex;
+  justify-content: end;
+}
+.contenedor-boton-salir_flex {
+  display: flex;
+  justify-content: space-between;
+}
+.contenedor__boton_flex {
+  display: flex;
 }
 .card-title {
   flex-grow: 2;

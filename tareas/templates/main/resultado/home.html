@@ -32,13 +32,15 @@
     <div class="card">
       <div class="card-body">
         <div class="contenedor-boton-salir">
-          <h5 class="card-title">{{ resultado.nombre }}</h5>
-          <a href="{% url 'modificar_resultado' resultado_id=resultado.id %}" class="boton-editar"><img src="https://live.staticflickr.com/65535/52970526099_6367029b9d_t.jpg" alt=""></a>
+          <h4 class="card-title bold">{{ resultado.nombre }}</h4>
+          <a href="{% url 'modificar_resultado' resultado_id=resultado.id %}"><img src="https://live.staticflickr.com/65535/52970526099_6367029b9d_t.jpg" alt="Editar imagen" class="imagen__editar"></a>
           <a href="{% url 'eliminar_resultado' resultado_id=resultado.id %}" class="btn btn-close" aria-label="Close"></a>
         </div>
-        <p class="card-text">{{ resultado.fecha }}</p>
         <p class="card-text">{{ resultado.texto }}</p>
-        <a href="{% url 'ver_actividad' resultado_id=resultado.id %}" class="btn btn-primary mt-4">Ir al resultado</a>
+        <p class="card-text mb-4">{{ resultado.fecha }}</p>
+        <div class="contenedor-boton-salir_flex">
+          <a href="{% url 'ver_actividad' resultado_id=resultado.id %}" class="enviar">Ir al resultado</a>
+        </div>
       </div>
     </div>
   </div>
