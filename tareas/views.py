@@ -183,7 +183,7 @@ def ver_secciones(request, resultado_id, actividad_id):
 
 
     secciones_completadas = sum(seccion.is_completed for seccion in secciones)
-
+    
 
     if total_secciones > 0:
         porcentaje = round((secciones_completadas / total_secciones) * 100)
@@ -204,6 +204,8 @@ def ver_secciones(request, resultado_id, actividad_id):
         total_porcentaje = 0
         divisor = 0
         variables = 0
+
+    
 
 
     return render(request, 'main/secciones/ver_secciones.html', {'resultado': resultado, 'actividad': actividad, 'secciones': secciones, 'actividad_id': actividad_id, 'total_secciones': total_secciones, 'secciones_completadas': secciones_completadas, 'porcentaje': porcentaje, 'resultado_id': resultado_id, 'total_porcentaje': total_porcentaje, 'actividad_actual': actividad_actual, 'tiempo_real': tiempo_real, 'mensaje': mensaje, 'variables': variables, 'current_datetime': current_datetime, 'secciones_terminadas': secciones_terminadas, 'horas_restantes': horas_restantes})

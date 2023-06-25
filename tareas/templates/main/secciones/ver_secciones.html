@@ -183,8 +183,12 @@
       <div class="col-lg-2">
         <div class="card">
           <div class="card-body centrar">
-            <h5 class="card-title">Fecha</h5>
-            <p class="card-text">{{ seccion.is_completed }}</p>
+            <h5 class="card-title">Avance</h5>
+            {% if seccion.is_completed %}
+            <p class="card-text">100%</p>
+            {% else %}
+            <p class="card-text">0%</p>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -203,10 +207,13 @@
   {% endfor %}
 
   
-
-
-  
 </form>
+
+
+
+
+
+
 
 <script>
 
