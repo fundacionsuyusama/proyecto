@@ -7,6 +7,75 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from datetime import datetime, timedelta
 
+from django.http import HttpResponse
+import openpyxl
+
+def exportar(request):
+    resultados = Resultado.objects.prefetch_related(
+        'actividad_set__seccion_set',
+        'actividad_set__dificultad_set__alternativa_set'
+    ).all()
+
+    # Crear un nuevo archivo de Excel
+    wb = openpyxl.Workbook()
+    sheet = wb.active
+
+    # Escribir encabezados de columna
+    sheet['A1'] = 'Nombre de Resultado'
+    sheet['B1'] = 'Nombre de Actividad'
+    sheet['C1'] = 'Contenido de Avance'
+    sheet['D1'] = 'Contenido de Dificultad'
+    sheet['E1'] = 'Contenido de Alternativa'
+    sheet['F1'] = 'Nombre de Sección'
+    sheet['G1'] = 'Contenido de Sección'
+
+    # Escribir los datos de los modelos
+    row_num = 2
+    for resultado in resultados:
+        actividades = resultado.actividad_set.all()
+        if actividades.exists():
+            for actividad in actividades:
+                avance = actividad.avance_set.first().contenido if actividad.avance_set.exists() else ''
+                dificultad = actividad.dificultad_set.first().contenido if actividad.dificultad_set.exists() else ''
+                alternativa = actividad.dificultad_set.first().alternativa_set.first().contenido if actividad.dificultad_set.exists() and actividad.dificultad_set.first().alternativa_set.exists() else ''
+                secciones = actividad.seccion_set.all()
+                if secciones.exists():
+                    for seccion in secciones:
+                        sheet[f'A{row_num}'] = resultado.nombre
+                        sheet[f'B{row_num}'] = actividad.nombre
+                        sheet[f'C{row_num}'] = avance
+                        sheet[f'D{row_num}'] = dificultad
+                        sheet[f'E{row_num}'] = alternativa
+                        sheet[f'F{row_num}'] = seccion.nombre
+                        sheet[f'G{row_num}'] = seccion.contenido
+                        row_num += 1
+                else:
+                    sheet[f'A{row_num}'] = resultado.nombre
+                    sheet[f'B{row_num}'] = actividad.nombre
+                    sheet[f'C{row_num}'] = avance
+                    sheet[f'D{row_num}'] = dificultad
+                    sheet[f'E{row_num}'] = alternativa
+                    sheet[f'F{row_num}'] = ''
+                    sheet[f'G{row_num}'] = ''
+                    row_num += 1
+        else:
+            sheet[f'A{row_num}'] = resultado.nombre
+            sheet[f'B{row_num}'] = ''
+            sheet[f'C{row_num}'] = ''
+            sheet[f'D{row_num}'] = ''
+            sheet[f'E{row_num}'] = ''
+            sheet[f'F{row_num}'] = ''
+            sheet[f'G{row_num}'] = ''
+            row_num += 1
+
+    # Configurar el nombre del archivo de descarga
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=modelos.xlsx'
+
+    # Guardar el archivo de Excel en la respuesta HTTP
+    wb.save(response)
+    return response
+
 @login_required(login_url='user_login')
 def eliminar_alternativa(request, resultado_id, actividad_id, dificultad_id, id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
