@@ -70,6 +70,24 @@
   transition: 1s all;
   text-align: center;
 }
+.enviar_datos {
+  width: 20%;
+  padding: 12px 10px 10px 12px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background-color: orange;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 1s all;
+  text-align: center;
+}
+.enviar_datos:hover {
+  background-color: darkorange;
+  transform: scale(0.95);
+}
 .contenedor-boton-resultados {
   display: flex;
   justify-content: center;

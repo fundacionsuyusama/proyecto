@@ -6,9 +6,12 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from datetime import datetime, timedelta
-
 from django.http import HttpResponse
 import openpyxl
+
+@login_required(login_url='user_login')
+def exportar_datos(request):
+    return render(request, 'main/herramientas/exportar.html')
 
 def exportar(request):
     resultados = Resultado.objects.prefetch_related(
@@ -22,12 +25,14 @@ def exportar(request):
 
     # Escribir encabezados de columna
     sheet['A1'] = 'Nombre de Resultado'
-    sheet['B1'] = 'Nombre de Actividad'
-    sheet['C1'] = 'Contenido de Avance'
-    sheet['D1'] = 'Contenido de Dificultad'
-    sheet['E1'] = 'Contenido de Alternativa'
-    sheet['F1'] = 'Nombre de Sección'
-    sheet['G1'] = 'Contenido de Sección'
+    sheet['B1'] = 'Contenido de Resultado'
+    sheet['C1'] = 'Nombre de Actividad'
+    sheet['D1'] = 'Contenido Actividad'
+    sheet['E1'] = 'Avance'
+    sheet['F1'] = 'Dificultad'
+    sheet['G1'] = 'Alternativa'
+    sheet['H1'] = 'Nombre de Sección'
+    sheet['I1'] = 'Contenido de Sección'
 
     # Escribir los datos de los modelos
     row_num = 2
@@ -42,21 +47,25 @@ def exportar(request):
                 if secciones.exists():
                     for seccion in secciones:
                         sheet[f'A{row_num}'] = resultado.nombre
-                        sheet[f'B{row_num}'] = actividad.nombre
-                        sheet[f'C{row_num}'] = avance
-                        sheet[f'D{row_num}'] = dificultad
-                        sheet[f'E{row_num}'] = alternativa
-                        sheet[f'F{row_num}'] = seccion.nombre
-                        sheet[f'G{row_num}'] = seccion.contenido
+                        sheet[f'B{row_num}'] = resultado.texto
+                        sheet[f'C{row_num}'] = actividad.nombre
+                        sheet[f'D{row_num}'] = actividad.contenido
+                        sheet[f'E{row_num}'] = avance
+                        sheet[f'F{row_num}'] = dificultad
+                        sheet[f'G{row_num}'] = alternativa
+                        sheet[f'H{row_num}'] = seccion.nombre
+                        sheet[f'I{row_num}'] = seccion.contenido
                         row_num += 1
                 else:
                     sheet[f'A{row_num}'] = resultado.nombre
-                    sheet[f'B{row_num}'] = actividad.nombre
-                    sheet[f'C{row_num}'] = avance
-                    sheet[f'D{row_num}'] = dificultad
-                    sheet[f'E{row_num}'] = alternativa
-                    sheet[f'F{row_num}'] = ''
-                    sheet[f'G{row_num}'] = ''
+                    sheet[f'B{row_num}'] = resultado.texto
+                    sheet[f'C{row_num}'] = actividad.nombre
+                    sheet[f'D{row_num}'] = actividad.contenido
+                    sheet[f'E{row_num}'] = avance
+                    sheet[f'F{row_num}'] = dificultad
+                    sheet[f'G{row_num}'] = alternativa
+                    sheet[f'H{row_num}'] = ''
+                    sheet[f'I{row_num}'] = ''
                     row_num += 1
         else:
             sheet[f'A{row_num}'] = resultado.nombre
@@ -66,6 +75,8 @@ def exportar(request):
             sheet[f'E{row_num}'] = ''
             sheet[f'F{row_num}'] = ''
             sheet[f'G{row_num}'] = ''
+            sheet[f'H{row_num}'] = ''
+            sheet[f'I{row_num}'] = ''
             row_num += 1
 
     # Configurar el nombre del archivo de descarga

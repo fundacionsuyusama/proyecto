@@ -65,9 +65,4 @@
   
 {% endfor %}
 
-<form action="{% url 'exportar' %}" method="post">
-  {% csrf_token %}
-  <button type="submit">Exportar a Excel</button>
-</form>
-
 {% endblock  %}
