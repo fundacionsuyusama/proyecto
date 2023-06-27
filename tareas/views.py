@@ -11,8 +11,10 @@ import openpyxl
 
 @login_required(login_url='user_login')
 def exportar_datos(request):
+    variable = "Hola desde exportar"
     return render(request, 'main/herramientas/exportar.html')
 
+@login_required(login_url='user_login')
 def exportar(request):
     resultados = Resultado.objects.prefetch_related(
         'actividad_set__seccion_set',
@@ -78,6 +80,7 @@ def exportar(request):
             sheet[f'H{row_num}'] = ''
             sheet[f'I{row_num}'] = ''
             row_num += 1
+
 
     # Configurar el nombre del archivo de descarga
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -390,7 +393,6 @@ def ver_actividad(request, resultado_id):
     actividades = resultado.actividad_set.all()
 
     current_datetime = timezone.now()
-
 
     return render(request, 'main/actividad/ver_actividad.html', {'resultado': resultado, 'actividades': actividades, 'current_datetime': current_datetime,})
 
