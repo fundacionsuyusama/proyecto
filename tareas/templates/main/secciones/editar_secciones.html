@@ -63,6 +63,11 @@
         required
       />
     </div>
+    <div class="mb-3">
+      <label for="exampleFormControlTextarea1" class="form-label">Fecha de vencimiento</label>
+      <label for="exampleFormControlTextarea1" class="form-label"></label>
+      <input class="form-control" type="datetime-local" name="fecha_vencimiento_seccion" id="fecha_vencimiento_seccion" value="{{ seccion.fecha_vencimiento_seccion|date:'Y-m-d\TH:i' }}" required>
+    </div>
     <div class="d-grid gap-2 col-4 mx-auto contenedor_botones mb-3">
       <button class="btn btn-primary" type="submit">Guardar</button>
       <a

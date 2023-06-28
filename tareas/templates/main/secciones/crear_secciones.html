@@ -30,6 +30,10 @@
       <label for="exampleFormControlInput1" class="form-label">Porcentaje de avance</label>
       <input type="number" class="form-control" id="exampleFormControlInput1" name="avance" placeholder="0%" value="0" required>
     </div>
+    <div class="mb-3">
+      <label for="exampleFormControlTextarea1" class="form-label">Fecha de vencimiento</label>
+      <input class="form-control" type="datetime-local" name="fecha_vencimiento_seccion" required>
+    </div>
     <div class="d-grid gap-2 col-3 mx-auto contenedor_botones mb-3">
       <button class="btn btn-primary" type="submit">Guardar</button>
       <a href="{% url 'ver_secciones' resultado_id=resultado.id actividad_id=actividad_id %}" class="btn btn-secondary" role="button">Volver</a>

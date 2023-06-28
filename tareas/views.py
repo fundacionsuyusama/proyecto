@@ -218,17 +218,6 @@ def guardar_seccion(request, resultado_id, actividad_id):
 
     return redirect('ver_secciones', resultado_id=resultado_id, actividad_id=actividad_id)
 
-def resta_fechas(actividad_id):
-    actividad = get_object_or_404(Actividad, id=actividad_id)
-    actividad_actual = actividad.fecha_vencimiento
-    current_datetime = timezone.now()
-    tiempo_real =  actividad_actual - current_datetime
-
-def resta_numero(num1, num2):
-    num1 = 2
-    num2 = 2
-    return num1 + num2
-
 @login_required(login_url='user_login')
 def ver_secciones(request, resultado_id, actividad_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
@@ -236,6 +225,10 @@ def ver_secciones(request, resultado_id, actividad_id):
     secciones = actividad.seccion_set.all()
     total_secciones = secciones.count()
     secciones_terminadas = Seccion.objects.filter(actividad=actividad)
+
+    # Código para las secciones de la fecha de vencimiento
+    for seccion_datos in secciones_terminadas:
+        seccion_datos.fecha_vencimiento_minus_24 = seccion_datos.fecha_vencimiento_seccion - timedelta(hours=24)
 
     actividad_actual = actividad.fecha_vencimiento
 
@@ -292,9 +285,7 @@ def ver_secciones(request, resultado_id, actividad_id):
         variables = 0
 
     
-
-
-    return render(request, 'main/secciones/ver_secciones.html', {'resultado': resultado, 'actividad': actividad, 'secciones': secciones, 'actividad_id': actividad_id, 'total_secciones': total_secciones, 'secciones_completadas': secciones_completadas, 'porcentaje': porcentaje, 'resultado_id': resultado_id, 'total_porcentaje': total_porcentaje, 'actividad_actual': actividad_actual, 'tiempo_real': tiempo_real, 'mensaje': mensaje, 'variables': variables, 'current_datetime': current_datetime, 'secciones_terminadas': secciones_terminadas, 'horas_restantes': horas_restantes})
+    return render(request, 'main/secciones/ver_secciones.html', {'resultado': resultado, 'actividad': actividad, 'secciones': secciones, 'actividad_id': actividad_id, 'total_secciones': total_secciones, 'secciones_completadas': secciones_completadas, 'porcentaje': porcentaje, 'resultado_id': resultado_id, 'total_porcentaje': total_porcentaje, 'actividad_actual': actividad_actual, 'tiempo_real': tiempo_real, 'mensaje': mensaje, 'variables': variables, 'current_datetime': current_datetime, 'secciones_terminadas': secciones_terminadas, 'horas_restantes': horas_restantes,})
 
 @login_required(login_url='user_login')
 def eliminar_secciones(request, resultado_id, actividad_id, id):
@@ -317,6 +308,7 @@ def editar_secciones(request, resultado_id, actividad_id, id):
         seccion.nombre = request.POST.get('nombre')
         seccion.contenido = request.POST.get('contenido')
         seccion.avance = request.POST.get('avance')
+        seccion.fecha_vencimiento_seccion = request.POST.get('fecha_vencimiento_seccion')
         seccion.save()
         return redirect('ver_secciones', resultado_id=resultado_id, actividad_id=actividad_id)
 
@@ -331,11 +323,13 @@ def crear_secciones(request, resultado_id, actividad_id):
         nombre = request.POST['nombre']
         avance = request.POST['avance']
         contenido = request.POST['contenido']
+        fecha_vencimiento_seccion = request.POST['fecha_vencimiento_seccion']
 
         seccion = actividad.seccion_set.create(
             nombre=nombre,
             avance=avance,
-            contenido=contenido
+            contenido=contenido,
+            fecha_vencimiento_seccion=fecha_vencimiento_seccion
             )
         seccion.save()
         return redirect('ver_secciones', resultado_id=resultado_id, actividad_id=actividad_id)

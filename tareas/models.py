@@ -25,6 +25,7 @@ class Seccion(models.Model):
     nombre = models.CharField(max_length=100)
     contenido = models.TextField()
     avance = models.IntegerField(default=False)
+    fecha_vencimiento_seccion = models.DateTimeField(null=True, blank=True)
     is_completed = models.BooleanField(default=False)
 
     def __str__(self):
