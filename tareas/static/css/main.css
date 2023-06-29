@@ -88,6 +88,13 @@
   background-color: darkorange;
   transform: scale(0.95);
 }
+
+@media (max-width:991px) {
+  .enviar_datos {
+    width: 100%;
+  }
+}
+
 .contenedor-boton-resultados {
   display: flex;
   justify-content: center;
