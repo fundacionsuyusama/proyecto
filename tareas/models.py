@@ -33,7 +33,7 @@ class Seccion(models.Model):
 
 class Avance(models.Model):
     actividad = models.ForeignKey(Actividad, on_delete=models.CASCADE)
-    contenido = models.TextField()
+    contenido = models.IntegerField()
 
     def __str__(self):
         return self.contenido

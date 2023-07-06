@@ -19,8 +19,8 @@
   <form method="post" class="mt-2 mb-2">
     {% csrf_token %}
     <div class="mb-3">
-      <label for="exampleFormControlInput1" class="form-label">Nombre actividad</label>
-      <input type="text" class="form-control" id="exampleFormControlInput1" name="contenido" value="{{ avance.contenido }}" required>
+      <label for="exampleFormControlInput1" class="form-label bold">Avance global</label>
+      <input type="number" class="form-control" id="exampleFormControlInput1" name="contenido" value="{{ avance.contenido }}" required>
     </div>
     <div class="d-grid gap-2 col-3 mx-auto contenedor_botones mb-3">
       <button class="btn btn-primary" type="submit">Guardar</button>
