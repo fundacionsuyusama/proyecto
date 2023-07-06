@@ -4,24 +4,7 @@
 
 {% block content %}
 
-<style>
-  .card {
-    box-shadow: 2px 2px 2px #CCC;
-  }
-  .card:hover {
-    box-shadow: 4px 4px 4px #CCC;
-  }
-  .container-actividades {
-    text-align: center;
-  }
-  .container__header__alt {
-    display: flex;
-    flex-direction: column;
-  }
-  .btn-link {
-    text-decoration: none;
-  }
-</style>
+<link rel="stylesheet" type="text/css" href="{% static 'css/ver_actividades.css' %}">
 
 <div class="container mt-3 container__header__all">
   <h2>{{ resultado.nombre }}</h2>
@@ -108,6 +91,31 @@
   </div>
 </div>
 
+
+<section class="tiempo container mb-5">
+  <h1 class="tiempo__titulo">Análisis de tiempo</h1>
+  <div class="tiempo__contenido">
+    <div class="tiempo__item">
+      <h3>Cumplida</h3>
+      <div class="tiempo__item-colores verde">
+        <button class="btn btn-dark">Agregar</button>
+      </div>
+    </div>
+    <div class="tiempo__item">
+      <h3>En proceso</h3>
+      <div class="tiempo__item-colores amarillo">
+        <button class="btn btn-dark">Agregar</button>
+      </div>
+    </div>
+    <div class="tiempo__item">
+      <h3>Urgente</h3>
+      <div class="tiempo__item-colores rojo">
+        <button class="btn btn-dark">Agregar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
 {% empty %}
 
   <div class="container custom-center">
@@ -118,5 +126,6 @@
   </div>
 
 {% endfor %}
+
 
 {% endblock  %}

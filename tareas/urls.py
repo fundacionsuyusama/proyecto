@@ -9,6 +9,7 @@ urlpatterns = [
   path('home', views.home, name='home'),
   path('exportar_datos', views.exportar_datos, name='exportar_datos'),
   path('exportar_datos/export', views.exportar, name='exportar'),
+  path('progreso', views.progreso, name='progreso'),
   path('crear_resultado', views.crear_resultado, name='crear_resultado'),
   path('modificar_resultado/<int:resultado_id>', views.modificar_resultado, name='modificar_resultado'),
   path('eliminar_resultado/<int:resultado_id>', views.eliminar_resultado, name='eliminar_resultado'),

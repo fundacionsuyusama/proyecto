@@ -10,6 +10,11 @@ from django.http import HttpResponse
 import openpyxl
 
 @login_required(login_url='user_login')
+def progreso(request):
+    resultados = Resultado.objects.all()
+    return render(request, 'main/tiempo/progreso.html', {'resultados': resultados})
+
+@login_required(login_url='user_login')
 def exportar_datos(request):
     variable = "Hola desde exportar"
     return render(request, 'main/herramientas/exportar.html')
