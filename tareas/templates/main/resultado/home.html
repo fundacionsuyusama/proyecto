@@ -10,9 +10,10 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/progreso.css' %}">
 
-<div class="container mt-4 pb-4 mb-4 progreso">
+<div class="container">
+<div class="mt-4 pb-4 mb-4 progreso">
   <h2 class="progreso__titulo">Resultados</h2>
-  <div class="row row-cols-1 row-cols-md-2 g-4 ml-5 progreso__contenedor">
+  <div class="row row-cols-1 row-cols-md-2 g-4 progreso__contenedor">
     {% for resultado in resultados %}
     <div class="col-lg-6 text">
       <div class="card">
@@ -24,7 +25,7 @@
           </div>
           <p class="card-text progreso__texto">{{ resultado.texto }}</p>
           <div class="progreso__boton-resultado">
-            <a href="{% url 'ver_actividad' resultado_id=resultado.id %}" class="btn btn-dark">Ir al resultado</a>
+            <a href="{% url 'ver_actividad' resultado_id=resultado.id %}" class="btn btn-dark progreso__boton-ir">Ir al resultado</a>
           </div>
         </div>
       </div>
@@ -46,7 +47,7 @@
     </div>
   </div>
 </div>
-
+</div>
 
 
 {% endblock  %}

@@ -74,6 +74,9 @@
   .progreso__titulo {
     padding-left: 3.9rem;
   }
+  .progreso__boton-ir {
+    width: 100%;
+ }
 }
 @media (max-width:991px) {
   .progreso__resultados {
@@ -90,4 +93,11 @@
   .progreso__titulo {
     padding-left: 0;
   }
+  
+}
+
+@media (max-width:767px){
+ .boton__crear {
+  width: 100%;
+ }
 }
