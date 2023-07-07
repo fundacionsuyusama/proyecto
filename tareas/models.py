@@ -5,6 +5,7 @@ class Resultado(models.Model):
     nombre = models.CharField(max_length=255)
     texto = models.TextField()
     fecha = models.DateTimeField(default=timezone.now, editable=False)
+    promedio_avance = models.FloatField(default=0)
 
     def __str__(self):
         return self.nombre

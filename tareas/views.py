@@ -12,7 +12,35 @@ import openpyxl
 @login_required(login_url='user_login')
 def progreso(request):
     resultados = Resultado.objects.all()
-    return render(request, 'main/tiempo/progreso.html', {'resultados': resultados})
+    total_promedio = 0
+    cantidad_resultados = 0
+    
+    for resultado in resultados:
+        actividades = resultado.actividad_set.all()
+        total_avance = 0
+        cantidad_actividades = 0
+        
+        for actividad in actividades:
+            avances = actividad.avance_set.all()
+            total_actividad = sum(avance.contenido for avance in avances)
+            cantidad_actividades += 1
+            total_avance += total_actividad
+        
+        if cantidad_actividades > 0:
+            promedio_avance = round(total_avance / cantidad_actividades)
+        else:
+            promedio_avance = 0
+        
+        resultado.promedio_avance = promedio_avance
+        total_promedio += promedio_avance
+        cantidad_resultados += 1
+    
+    if cantidad_resultados > 0:
+        promedio_total = round(total_promedio / cantidad_resultados)
+    else:
+        promedio_total = 0
+    
+    return render(request, 'main/tiempo/progreso.html', {'resultados': resultados, 'promedio_total': promedio_total})
 
 @login_required(login_url='user_login')
 def exportar_datos(request):
@@ -429,7 +457,34 @@ def crear_resultado(request):
 @login_required(login_url='user_login')
 def home(request):
     resultados = Resultado.objects.all()
-    return render(request, 'main/resultado/home.html', {'resultados':resultados,})
+    total_promedio = 0
+    cantidad_resultados = 0
+    
+    for resultado in resultados:
+        actividades = resultado.actividad_set.all()
+        total_avance = 0
+        cantidad_actividades = 0
+        
+        for actividad in actividades:
+            avances = actividad.avance_set.all()
+            total_actividad = sum(avance.contenido for avance in avances)
+            cantidad_actividades += 1
+            total_avance += total_actividad
+        
+        if cantidad_actividades > 0:
+            promedio_avance = round(total_avance / cantidad_actividades)
+        else:
+            promedio_avance = 0
+        
+        resultado.promedio_avance = promedio_avance
+        total_promedio += promedio_avance
+        cantidad_resultados += 1
+    
+    if cantidad_resultados > 0:
+        promedio_total = round(total_promedio / cantidad_resultados)
+    else:
+        promedio_total = 0
+    return render(request, 'main/resultado/home.html', {'resultados':resultados, 'promedio_total':promedio_total})
 
 @login_required(login_url='user_login')
 def index(request):

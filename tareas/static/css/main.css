@@ -1,4 +1,9 @@
 /* Estilos Generales */
+.container__resultado-header {
+  display: flex;
+  justify-content: end;
+  align-items: end;
+}
 .container__header {
   display: flex;
 }

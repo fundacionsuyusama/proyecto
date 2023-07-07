@@ -33,7 +33,10 @@
             <a href="{% url 'ver_secciones' resultado_id=resultado.id actividad_id=actividad.id %}" class="enviar" role="button">Ver secciones</a>
          </div>
          <div class="mt-3 contenedor-boton-salir_flex">
+          {% if actividad.avance_set.exists %}       
+          {% else %}
           <a href="{% url 'crear_avance' resultado_id=resultado.id actividad_id=actividad.id %}" role="button" class="btn btn-outline-dark">Crear avance</a>
+          {% endif %}    
           <a href="{% url 'crear_dificultad' resultado_id=resultado.id actividad_id=actividad.id %}" role="button" class="btn btn-outline-dark">Crear dificultad</a>
         </div>
         </div>
@@ -44,7 +47,7 @@
       <div class="card mb-2">
         <div class="card-body">
           <h5 class="centrar">Avance Global</h5>        
-          <h6 class="card-text centrar">{{ avance.contenido }}</h6>
+          <h6 class="card-text centrar">{{ avance.contenido }}%</h6>
           <div class="contenedor-boton-salir_flex">
             <a href="{% url 'editar_avance' resultado_id=resultado.id actividad_id=actividad.id id=avance.id %}" role="button"><img src="https://live.staticflickr.com/65535/52970526099_6367029b9d_t.jpg" alt="" class="imagen__editar"></a>
             <a href="{% url 'eliminar_avance' resultado_id=resultado.id actividad_id=actividad.id id=avance.id %}" role="button" class="btn btn-close" aria-label="Close"></a>
@@ -67,7 +70,7 @@
             </div>
             <p>{{ dificultad.contenido }}</p>
             <div class="contenedor-boton-avance">
-              <a href="{% url 'crear_alternativa' resultado_id=resultado.id actividad_id=actividad.id dificultad_id=dificultad.id %}" role="button" class="btn btn-primary">Crear alternativa</a>
+              <a href="{% url 'crear_alternativa' resultado_id=resultado.id actividad_id=actividad.id dificultad_id=dificultad.id %}" role="button" class="btn btn-secondary">Crear alternativa</a>
             </div>
           </div>
           <div id="alternativas{{ dificultad.id }}" class="collapse show" aria-labelledby="dificultad{{ dificultad.id }}" data-bs-parent="#dificultadesAccordion">

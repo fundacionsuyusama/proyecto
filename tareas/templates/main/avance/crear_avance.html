@@ -17,7 +17,7 @@
     {% csrf_token %}
     <div class="mb-3">
       <label for="exampleFormControlInput1" class="form-label bold">Crear avance global</label>
-      <input type="number" class="form-control" id="exampleFormControlInput1" name="contenido" placeholder="0%" value="0" required>
+      <input type="number" min="0" max="100" class="form-control" id="exampleFormControlInput1" name="contenido" placeholder="0%" value="0" required>
     </div>
     <div class="d-grid gap-2 col-3 mx-auto contenedor_botones mb-3">
       <button class="btn btn-primary" type="submit">Guardar</button>
