@@ -18,8 +18,22 @@ urlpatterns = [
   path('home/resultado/<int:resultado_id>/editar/<int:actividad_id>', views.editar_actividad, name='editar_actividad'),
   path('home/resultado/<int:resultado_id>/eliminar/<int:actividad_id>', views.eliminra_actividad, name='eliminra_actividad'),
   path('home/resultado/<int:resultado_id>/actividad/<int:actividad_id>/crear_avance', views.crear_avance, name='crear_avance'),
+  # Estoy aquí
+  path('home/resultado/<int:resultado_id>/actividad/<int:actividad_id>/crear_fecha', views.crear_cumplida, name='crear_cumplida'),
+  path('home/resultado/<int:resultado_id>/actividad/<int:actividad_id>/crear_proceso', views.crear_proceso, name='crear_proceso'),
+  path('home/resultado/<int:resultado_id>/actividad/<int:actividad_id>/crear_urgente', views.crear_urgente, name='crear_urgente'),
   path('home/resultado/<int:resultado_id>/actividad/<int:actividad_id>/editar_avance/<int:id>', views.editar_avance, name='editar_avance'),
+  # Ahora aqui
+  path('home/resultado/<int:resultado_id>/actividad/<int:actividad_id>/editar_fecha/<int:id>', views.editar_cumplida, name='editar_cumplida'),
+  path('home/resultado/<int:resultado_id>/actividad/<int:actividad_id>/editar_proceso/<int:id>', views.editar_proceso, name='editar_proceso'),
+  path('home/resultado/<int:resultado_id>/actividad/<int:actividad_id>/editar_urgente/<int:id>', views.editar_urgente, name='editar_urgente'),
+
   path('home/resultado/<int:resultado_id>/actividad/<int:actividad_id>/eliminar_avance/<int:id>', views.eliminar_avance, name='eliminar_avance'),
+  # Esto aqui
+  path('home/resultado/<int:resultado_id>/actividad/<int:actividad_id>/eliminar_fecha/<int:id>', views.eliminar_cumplida, name='eliminar_cumplida'),
+  path('home/resultado/<int:resultado_id>/actividad/<int:actividad_id>/eliminar_proceso/<int:id>', views.eliminar_proceso, name='eliminar_proceso'),
+  path('home/resultado/<int:resultado_id>/actividad/<int:actividad_id>/eliminar_urgente/<int:id>', views.eliminar_urgente, name='eliminar_urgente'),
+
   path('home/resultado/<int:resultado_id>/actividad/<int:actividad_id>/eliminar_dificultad/<int:id>', views.eliminar_dificultad, name='eliminar_dificultad'),
   path('home/resultado/<int:resultado_id>/actividad/<int:actividad_id>/crear_dificultad', views.crear_dificultad, name='crear_dificultad'),
   path('home/resultado/<int:resultado_id>/actividad/<int:actividad_id>/editar_dificultad/<int:id>', views.editar_dificultad, name='editar_dificultad'),

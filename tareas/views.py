@@ -208,6 +208,39 @@ def eliminar_avance(request, resultado_id, actividad_id, id):
     return render(request, 'main/avance/eliminar_avance.html', {'avance': avance, 'resultado': resultado, ' resultado_id': resultado_id,})
 
 @login_required(login_url='user_login')
+def eliminar_cumplida(request, resultado_id, actividad_id, id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    cumplido = get_object_or_404(Cumplido, id=id)
+
+    if request.method == 'POST':
+        cumplido.delete()
+        return redirect('ver_actividad', resultado_id=resultado_id)
+    
+    return render(request, 'main/tiempo/cumplida/eliminar-cumplida.html', {'cumplido': cumplido, 'resultado': resultado, ' resultado_id': resultado_id,})
+
+@login_required(login_url='user_login')
+def eliminar_proceso(request, resultado_id, actividad_id, id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    proceso = get_object_or_404(Proceso, id=id)
+
+    if request.method == 'POST':
+        proceso.delete()
+        return redirect('ver_actividad', resultado_id=resultado_id)
+    
+    return render(request, 'main/tiempo/proceso/eliminar-proceso.html', {'proceso': proceso, 'resultado': resultado, ' resultado_id': resultado_id})
+
+@login_required(login_url='user_login')
+def eliminar_urgente(request, resultado_id, actividad_id, id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    urgente = get_object_or_404(Urgente, id=id)
+
+    if request.method == 'POST':
+        urgente.delete()
+        return redirect('ver_actividad', resultado_id=resultado_id)
+    
+    return render(request, 'main/tiempo/urgente/eliminar-urgente.html', {'urgente': urgente, 'resultado': resultado, ' resultado_id': resultado_id})
+
+@login_required(login_url='user_login')
 def editar_avance(request, resultado_id, actividad_id, id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
     avance = get_object_or_404(Avance, id=id)
@@ -218,6 +251,43 @@ def editar_avance(request, resultado_id, actividad_id, id):
         return redirect('ver_actividad', resultado_id=resultado_id,)
     
     return render(request, 'main/avance/editar_avance.html', {'avance': avance, 'resultado': resultado})
+
+@login_required(login_url='user_login')
+def editar_cumplida(request, resultado_id, actividad_id, id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    cumplido = get_object_or_404(Cumplido, id=id)
+
+    if request.method == 'POST':
+        cumplido.cumplida = request.POST.get('cumplida')
+        cumplido.save()
+        return redirect('ver_actividad', resultado_id=resultado_id,)
+    
+    return render(request, 'main/tiempo/cumplida/editar-cumplida.html', {'cumplido': cumplido, 'resultado': resultado})
+
+@login_required(login_url='user_login')
+def editar_proceso(request, resultado_id, actividad_id, id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    proceso = get_object_or_404(Proceso, id=id)
+
+    if request.method == 'POST':
+        proceso.proceso = request.POST.get('proceso')
+        proceso.save()
+        return redirect('ver_actividad', resultado_id=resultado_id,)
+    
+    return render(request, 'main/tiempo/proceso/editar-proceso.html', {'proceso': proceso, 'resultado': resultado})
+
+@login_required(login_url='user_login')
+def editar_urgente(request, resultado_id, actividad_id, id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    urgente = get_object_or_404(Urgente, id=id)
+
+    if request.method == 'POST':
+        urgente.urgente = request.POST.get('urgente')
+        urgente.save()
+        return redirect('ver_actividad', resultado_id=resultado_id,)
+    
+    return render(request, 'main/tiempo/urgente/editar-urgente.html', {'urgente': urgente, 'resultado': resultado})
+
 
 @login_required(login_url='user_login')
 def crear_avance(request, resultado_id, actividad_id):
@@ -231,6 +301,45 @@ def crear_avance(request, resultado_id, actividad_id):
         return redirect('ver_actividad', resultado_id=resultado.id)
     
     return render(request, 'main/avance/crear_avance.html', {'actividad': actividad, 'resultado': resultado})
+
+@login_required(login_url='user_login')
+def crear_cumplida(request, resultado_id, actividad_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    actividad = get_object_or_404(Actividad, id=actividad_id)
+
+    if request.method == 'POST':
+        cumplida = request.POST['cumplida']
+        cumplido = actividad.cumplido_set.create(cumplida=cumplida)
+        cumplido.save()
+        return redirect('ver_actividad', resultado_id=resultado.id)
+    
+    return render(request, 'main/tiempo/cumplida/cumplida.html', {'actividad': actividad, 'resultado': resultado})
+
+@login_required(login_url='user_login')
+def crear_proceso(request, resultado_id, actividad_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    actividad = get_object_or_404(Actividad, id=actividad_id)
+
+    if request.method == 'POST':
+        proceso = request.POST['proceso']
+        tiempo = actividad.proceso_set.create(proceso=proceso)
+        tiempo.save()
+        return redirect('ver_actividad', resultado_id=resultado.id)
+    
+    return render(request, 'main/tiempo/proceso/proceso.html', {'actividad': actividad, 'resultado': resultado})
+
+@login_required(login_url='user_login')
+def crear_urgente(request, resultado_id, actividad_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    actividad = get_object_or_404(Actividad, id=actividad_id)
+
+    if request.method == 'POST':
+        urgente = request.POST['urgente']
+        tiempo = actividad.urgente_set.create(urgente=urgente)
+        tiempo.save()
+        return redirect('ver_actividad', resultado_id=resultado.id)
+    
+    return render(request, 'main/tiempo/urgente/urgente.html', {'actividad': actividad, 'resultado': resultado})
 
 
 @login_required(login_url='user_login')

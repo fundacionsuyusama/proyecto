@@ -101,23 +101,57 @@
     <div class="tiempo__item">
       <h3>Cumplida</h3>
       <div class="tiempo__item-colores verde">
-        <button class="btn btn-dark">Agregar</button>
+        {% for verde in actividad.cumplido_set.all %}
+        <p class="tiempo__item-contenido">{{ verde.cumplida }}</p>
+        <div class="tiempo_botones-ae">
+          <a href="{% url 'editar_cumplida' resultado_id=resultado.id actividad_id=actividad.id id=verde.id %}" role="button" class="btn btn-dark">Editar</a>
+          <a href="{% url 'eliminar_cumplida' resultado_id=resultado.id actividad_id=actividad.id id=verde.id %}" role="button" class="btn btn-dark">Eliminar</a>
+        </div>
+        {% endfor %}    
+
+        {% if actividad.cumplido_set.exists %}
+        {% else %}
+        <a href="{% url 'crear_cumplida' resultado_id=resultado.id actividad_id=actividad.id %}" role="button" class="btn btn-dark tiempo__boton-agregar">Agregar</a>
+        {% endif %}
       </div>
     </div>
     <div class="tiempo__item">
       <h3>En proceso</h3>
       <div class="tiempo__item-colores amarillo">
-        <button class="btn btn-dark">Agregar</button>
+        {% for amarrilla in actividad.proceso_set.all %}
+        <p class="tiempo__item-contenido">{{ amarrilla.proceso }}</p>
+        <div class="tiempo_botones-ae">
+          <a href="{% url 'editar_proceso' resultado_id=resultado.id actividad_id=actividad.id id=amarrilla.id %}" role="button" class="btn btn-dark">Editar</a>
+          <a href="{% url 'eliminar_proceso' resultado_id=resultado.id actividad_id=actividad.id id=amarrilla.id %}" role="button" class="btn btn-dark">Eliminar</a>
+        </div>
+        {% endfor %}
+        
+        {% if actividad.proceso_set.exists %}       
+        {% else %}
+        <a href="{% url 'crear_proceso' resultado_id=resultado.id actividad_id=actividad.id %}" role="button" class="btn btn-dark tiempo__boton-agregar">Agregar</a>   
+        {% endif %}
       </div>
     </div>
     <div class="tiempo__item">
       <h3>Urgente</h3>
       <div class="tiempo__item-colores rojo">
-        <button class="btn btn-dark">Agregar</button>
+        {% for rojo in actividad.urgente_set.all %}
+        <p class="tiempo__item-contenido">{{ rojo.urgente }}</p>
+        <div class="tiempo_botones-ae">
+          <a href="{% url 'editar_urgente' resultado_id=resultado.id actividad_id=actividad.id id=rojo.id %}" role="button" class="btn btn-dark">Editar</a>
+          <a href="{% url 'eliminar_urgente' resultado_id=resultado.id actividad_id=actividad.id id=rojo.id %}" role="button" class="btn btn-dark">Eliminar</a>
+        </div>
+        {% endfor %}
+
+        {% if actividad.urgente_set.exists %}       
+        {% else %}
+        <a href="{% url 'crear_urgente' resultado_id=resultado.id actividad_id=actividad.id %}" role="button" class="btn btn-dark tiempo__boton-agregar">Agregar</a>   
+        {% endif %}
       </div>
     </div>
   </div>
 </section>
+
 
 {% empty %}
 

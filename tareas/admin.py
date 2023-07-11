@@ -7,5 +7,6 @@ admin.site.register(Seccion)
 admin.site.register(Avance)
 admin.site.register(Dificultad)
 admin.site.register(Alternativa)
-
-# Register your models here.
+admin.site.register(Cumplido)
+admin.site.register(Proceso)
+admin.site.register(Urgente)
