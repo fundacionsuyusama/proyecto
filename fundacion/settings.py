@@ -143,7 +143,7 @@ if not DEBUG:    # Tell Django to copy statics to the `staticfiles` directory
 LOGIN_REDIRECT_URL = reverse_lazy('home')
 
 # Cerrar Sesión
-LOGOUT_REDIRECT_URL = 'login'
+LOGOUT_REDIRECT_URL = 'user_login'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

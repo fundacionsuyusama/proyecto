@@ -563,6 +563,7 @@ def crear_resultado(request):
 
     return render(request, 'main/resultado/crear_resultado.html', {'form': form, 'fecha_actual': fecha_actual,})
 
+# @login_required(login_url='/login/?next=/')
 @login_required(login_url='user_login')
 def home(request):
     resultados = Resultado.objects.all()

@@ -11,43 +11,59 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/progreso.css' %}">
 
 <div class="container">
-<div class="mt-4 pb-4 mb-4 progreso">
-  <h2 class="progreso__titulo">Resultados</h2>
-  <div class="row row-cols-1 row-cols-md-2 g-4 progreso__contenedor">
-    {% for resultado in resultados %}
-    <div class="col-lg-6 text">
-      <div class="card">
-        <div class="card-body">
-          <div class="contenedor-boton-salir">
-            <h4 class="card-title bold">{{ resultado.nombre }}</h4>
-            <a href="{% url 'modificar_resultado' resultado_id=resultado.id %}"><img src="https://live.staticflickr.com/65535/52970526099_6367029b9d_t.jpg" alt="Editar imagen" class="imagen__editar"></a>
-            <a href="{% url 'eliminar_resultado' resultado_id=resultado.id %}" class="btn btn-close" aria-label="Close"></a>
-          </div>
-          <p class="card-text progreso__texto">{{ resultado.texto }}</p>
-          <div class="progreso__boton-resultado">
-            <a href="{% url 'ver_actividad' resultado_id=resultado.id %}" class="btn btn-dark progreso__boton-ir">Ir al resultado</a>
+  {% if resultados %}
+  <div class="mt-4 pb-4 mb-4 progreso">
+    <h2 class="progreso__titulo">Resultados</h2>
+    <div class="row row-cols-1 row-cols-md-2 g-4 progreso__contenedor">
+  {% endif %}   
+      {% for resultado in resultados %}
+      <div class="col-lg-6 text">
+        <div class="card">
+          <div class="card-body">
+            <div class="contenedor-boton-salir">
+              <h4 class="card-title bold">{{ resultado.nombre }}</h4>
+              <a href="{% url 'modificar_resultado' resultado_id=resultado.id %}"><img src="https://live.staticflickr.com/65535/52970526099_6367029b9d_t.jpg" alt="Editar imagen" class="imagen__editar"></a>
+              <a href="{% url 'eliminar_resultado' resultado_id=resultado.id %}" class="btn btn-close" aria-label="Close"></a>
+            </div>
+            <p class="card-text progreso__texto">{{ resultado.texto }}</p>
+            <div class="progreso__boton-resultado">
+              <a href="{% url 'ver_actividad' resultado_id=resultado.id %}" class="btn btn-dark progreso__boton-ir">Ir al resultado</a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="col-lg-4">
-      <div class="card">
-        <div class="card-body progreso__card">
-          <h5 class="card-title">Promedio de avance</h5>
-          <p class="card-text">{{ resultado.promedio_avance }}%</p>
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-body progreso__card">
+            <h5 class="card-title">Promedio de avance</h5>
+            <p class="card-text">{{ resultado.promedio_avance }}%</p>
+          </div>
         </div>
       </div>
+      {% empty %}
+      <div class="col-12 contenedor__no-resultados">
+        <div class="jumbotron text-center">
+          <h1 class="display-4">No hay resultados registrados</h1>
+          <p class="lead">No se ha encontrado ningún resultado en este momento.</p>
+        </div>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
-  </div>
-  <div class="progreso__resultados">
-    <div class="progreso__promedio">
-      <h5>Promedio total de resultados</h5>
-      <p class="card-text">{{ promedio_total }}%</p>
+    {% if resultados %}
+    <div class="progreso__resultados">
+      <div class="progreso__promedio">
+        <h5>Promedio total de resultados</h5>
+        <p class="card-text">{{ promedio_total }}%</p>
+      </div>
     </div>
+    {% endif %}
   </div>
 </div>
-</div>
+
+
+
 
 
 {% endblock  %}
+
+
