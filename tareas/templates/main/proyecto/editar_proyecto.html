@@ -9,15 +9,12 @@
     display: flex;
     justify-content: end;
   }
-  .form-label {
-    font-weight: bold;
-  }
 </style>
 
 <div class="container mt-3">
   <div class="card">
     <div class="card-header text-center">
-      <h3 class="fst-italic mt-2 font-monospace">Editar proyecto</h3>
+      <h3 class="fst-italic mt-2 font-monospace card__titulo-h3">Editar proyecto</h3>
     </div>
   </div>
 </div>
@@ -26,7 +23,7 @@
   <form method="post" class="mt-2 mb-2">
     {% csrf_token %}
     <div class="mb-3">
-      <h5 for="exampleFormControlInput1" class="form-label font-monospace fst-italic pb-2">Nombre del proyecto</h5>
+      <h5 for="exampleFormControlInput1" class="form-label font-monospace fst-italic pb-2 card__titulo-h3">Nombre del proyecto</h5>
       <input type="text" class="form-control" id="exampleFormControlInput1" name="nombre" value="{{ proyecto.nombre }}">
     </div>
     <div class="contenedor__boton-all mb-3 pt-3">
