@@ -5,7 +5,14 @@
 {% block content %}
 
 <div class="container mt-2">
-  <h2>Registro Actividad</h2>
+  <div class="card">
+    <div class="card-header text-center">
+      <h3 class="fst-italic mt-2 font-monospace">Crear Actividad</h3>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-2">
   <form method="post" class="mt-2 mb-2">
     {% csrf_token %}
     <div class="mb-3">
@@ -23,9 +30,9 @@
     <div class="mb-3 contenedor-fecha-resultado">
       <label for="">{{ fecha_actual }}</label>
     </div>
-    <div class="d-grid gap-2 col-3 mx-auto contenedor_botones mb-3">
-      <button type="submit" class="btn btn-primary">Guardar</button>
-      <a href="{% url 'ver_actividad' resultado_id=resultado.id %}" role="button" class="btn btn-secondary">Volver</a>
+    <div class="contenedor__boton-all">
+      <button type="submit" class="btn btn-primary contenedor__boton-guardar">Guardar</button>
+      <a href="{% url 'ver_actividad' proyecto_id=proyecto.id resultado_id=resultado.id %}" role="button" class="btn btn-secondary contenedor__boton-guardar">Volver</a>
     </div>
   </form>
 </div>

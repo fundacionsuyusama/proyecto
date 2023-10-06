@@ -38,9 +38,19 @@
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         {% if request.user.is_authenticated %}
         <div class="container">
+
           <a class="navbar-brand" href="https://fundacion.onrender.com/admin"
-            >Fundación Suyusama</a
-          >
+          >Fundación Suyusama</a>
+          {% comment %} {% for proyecto in proyectos %}
+          {% if forloop.first %}
+          <a class="navbar-brand" href="https://fundacion.onrender.com/admin"
+          >Fundación Suyusama</a>
+          {% endif %}
+          {% empty %}
+          <a class="navbar-brand" href="https://fundacion.onrender.com/admin"
+          >{{ proyecto.nombre }}</a>
+          {% endfor %} {% endcomment %}
+          
           <button
             class="navbar-toggler"
             type="button"

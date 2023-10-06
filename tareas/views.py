@@ -8,6 +8,7 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 from django.http import HttpResponse
 import openpyxl
+from django.contrib.auth.models import User
 
 @login_required(login_url='user_login')
 def progreso(request):
@@ -123,227 +124,251 @@ def exportar(request):
     wb.save(response)
     return response
 
+
+#! En Urgente - Análisis tiempo
 @login_required(login_url='user_login')
-def eliminar_alternativa(request, resultado_id, actividad_id, dificultad_id, id):
-    resultado = get_object_or_404(Resultado, id=resultado_id)
-    alternativa = get_object_or_404(Alternativa, id=id)
-
-    if request.method == 'POST':
-        alternativa.delete()
-        return redirect('ver_actividad', resultado_id=resultado_id)
-    
-    return render(request, 'main/alternativa/eliminar_alternativa.html', {'alternativa': alternativa, 'resultado': resultado, 'resultado_id': resultado_id})
-
-@login_required(login_url='user_login')
-def editar_alternativa(request, resultado_id, actividad_id, dificultad_id, id):
-    alternativa = get_object_or_404(Alternativa, id=id)
-    resultado = get_object_or_404(Resultado, id=resultado_id)
-
-    if request.method == 'POST':
-        alternativa.contenido = request.POST.get('contenido')
-        alternativa.save()
-        return redirect('ver_actividad', resultado_id=resultado_id)
-
-    return render(request, 'main/alternativa/editar_alternativa.html', {'alternativa': alternativa, 'resultado': resultado})
-
-@login_required(login_url='user_login')
-def crear_alternativa(request, resultado_id, actividad_id, dificultad_id):
-    resultado = get_object_or_404(Resultado, id=resultado_id)
-    actividad = get_object_or_404(Actividad, id=actividad_id)
-    dificultad = get_object_or_404(Dificultad, id=dificultad_id)
-
-    if request.method == 'POST':
-        contenido = request.POST['contenido']
-        alternativa = dificultad.alternativa_set.create(contenido=contenido)
-        alternativa.save()
-        return redirect('ver_actividad', resultado_id=resultado.id)
-    
-    return render(request, 'main/alternativa/crear_alternativa.html', {'actividad': actividad, 'resultado': resultado})
-
-@login_required(login_url='user_login')
-def editar_dificultad(request, resultado_id, actividad_id, id):
-    dificultad = get_object_or_404(Dificultad, id=id)
-    resultado = get_object_or_404(Resultado, id=resultado_id)
-
-    if request.method == 'POST':
-        dificultad.contenido = request.POST.get('contenido')
-        dificultad.save()
-        return redirect('ver_actividad', resultado_id=resultado_id,)
-    
-    return render(request, 'main/dificultad/editar_dificultad.html', {'dificultad': dificultad, 'resultado': resultado})
-
-@login_required(login_url='user_login')
-def crear_dificultad(request, resultado_id, actividad_id):
-    resultado = get_object_or_404(Resultado, id=resultado_id)
-    actividad = get_object_or_404(Actividad, id=actividad_id)
-
-    if request.method == 'POST':
-        contenido = request.POST['contenido']
-        dificultad = actividad.dificultad_set.create(contenido=contenido)
-        dificultad.save()
-        return redirect('ver_actividad', resultado_id=resultado.id)
-    
-    return render(request, 'main/dificultad/crear_dificultad.html', {'actividad': actividad, 'resultado': resultado})
-
-@login_required(login_url='user_login')
-def eliminar_dificultad(request, resultado_id, actividad_id, id):
-    resultado = get_object_or_404(Resultado, id=resultado_id)
-    dificultad = get_object_or_404(Dificultad, id=id)
-
-    if request.method == 'POST':
-        dificultad.delete()
-        return redirect('ver_actividad', resultado_id=resultado_id)
-    
-    return render(request, 'main/dificultad/eliminar_dificultad.html', {'dificultad': dificultad, 'resultado':resultado, 'resultado_id': resultado_id})
-
-@login_required(login_url='user_login')
-def eliminar_avance(request, resultado_id, actividad_id, id):
-    resultado = get_object_or_404(Resultado, id=resultado_id)
-    avance = get_object_or_404(Avance, id=id)
-
-    if request.method == 'POST':
-        avance.delete()
-        return redirect('ver_actividad', resultado_id=resultado_id)
-    
-    return render(request, 'main/avance/eliminar_avance.html', {'avance': avance, 'resultado': resultado, ' resultado_id': resultado_id,})
-
-@login_required(login_url='user_login')
-def eliminar_cumplida(request, resultado_id, actividad_id, id):
-    resultado = get_object_or_404(Resultado, id=resultado_id)
-    cumplido = get_object_or_404(Cumplido, id=id)
-
-    if request.method == 'POST':
-        cumplido.delete()
-        return redirect('ver_actividad', resultado_id=resultado_id)
-    
-    return render(request, 'main/tiempo/cumplida/eliminar-cumplida.html', {'cumplido': cumplido, 'resultado': resultado, ' resultado_id': resultado_id,})
-
-@login_required(login_url='user_login')
-def eliminar_proceso(request, resultado_id, actividad_id, id):
-    resultado = get_object_or_404(Resultado, id=resultado_id)
-    proceso = get_object_or_404(Proceso, id=id)
-
-    if request.method == 'POST':
-        proceso.delete()
-        return redirect('ver_actividad', resultado_id=resultado_id)
-    
-    return render(request, 'main/tiempo/proceso/eliminar-proceso.html', {'proceso': proceso, 'resultado': resultado, ' resultado_id': resultado_id})
-
-@login_required(login_url='user_login')
-def eliminar_urgente(request, resultado_id, actividad_id, id):
+def eliminar_urgente(request, resultado_id, actividad_id, id, proyecto_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
     urgente = get_object_or_404(Urgente, id=id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
 
     if request.method == 'POST':
         urgente.delete()
-        return redirect('ver_actividad', resultado_id=resultado_id)
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado_id)
     
-    return render(request, 'main/tiempo/urgente/eliminar-urgente.html', {'urgente': urgente, 'resultado': resultado, ' resultado_id': resultado_id})
+    return render(request, 'main/tiempo/urgente/eliminar-urgente.html', {'urgente': urgente, 'resultado': resultado, ' resultado_id': resultado_id, 'proyecto': proyecto})
 
 @login_required(login_url='user_login')
-def editar_avance(request, resultado_id, actividad_id, id):
-    resultado = get_object_or_404(Resultado, id=resultado_id)
-    avance = get_object_or_404(Avance, id=id)
-    
-    if request.method == 'POST':
-        avance.contenido = request.POST.get('contenido')
-        avance.save()
-        return redirect('ver_actividad', resultado_id=resultado_id,)
-    
-    return render(request, 'main/avance/editar_avance.html', {'avance': avance, 'resultado': resultado})
-
-@login_required(login_url='user_login')
-def editar_cumplida(request, resultado_id, actividad_id, id):
-    resultado = get_object_or_404(Resultado, id=resultado_id)
-    cumplido = get_object_or_404(Cumplido, id=id)
-
-    if request.method == 'POST':
-        cumplido.cumplida = request.POST.get('cumplida')
-        cumplido.save()
-        return redirect('ver_actividad', resultado_id=resultado_id,)
-    
-    return render(request, 'main/tiempo/cumplida/editar-cumplida.html', {'cumplido': cumplido, 'resultado': resultado})
-
-@login_required(login_url='user_login')
-def editar_proceso(request, resultado_id, actividad_id, id):
-    resultado = get_object_or_404(Resultado, id=resultado_id)
-    proceso = get_object_or_404(Proceso, id=id)
-
-    if request.method == 'POST':
-        proceso.proceso = request.POST.get('proceso')
-        proceso.save()
-        return redirect('ver_actividad', resultado_id=resultado_id,)
-    
-    return render(request, 'main/tiempo/proceso/editar-proceso.html', {'proceso': proceso, 'resultado': resultado})
-
-@login_required(login_url='user_login')
-def editar_urgente(request, resultado_id, actividad_id, id):
+def editar_urgente(request, resultado_id, actividad_id, id, proyecto_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
     urgente = get_object_or_404(Urgente, id=id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
 
     if request.method == 'POST':
         urgente.urgente = request.POST.get('urgente')
         urgente.save()
-        return redirect('ver_actividad', resultado_id=resultado_id,)
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado_id,)
     
-    return render(request, 'main/tiempo/urgente/editar-urgente.html', {'urgente': urgente, 'resultado': resultado})
-
+    return render(request, 'main/tiempo/urgente/editar-urgente.html', {'urgente': urgente, 'resultado': resultado, 'proyecto': proyecto})
 
 @login_required(login_url='user_login')
-def crear_avance(request, resultado_id, actividad_id):
+def crear_urgente(request, resultado_id, actividad_id, proyecto_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
     actividad = get_object_or_404(Actividad, id=actividad_id)
-
-    if request.method == 'POST':
-        contenido = request.POST['contenido']
-        avance = actividad.avance_set.create(contenido=contenido)
-        avance.save()
-        return redirect('ver_actividad', resultado_id=resultado.id)
-    
-    return render(request, 'main/avance/crear_avance.html', {'actividad': actividad, 'resultado': resultado})
-
-@login_required(login_url='user_login')
-def crear_cumplida(request, resultado_id, actividad_id):
-    resultado = get_object_or_404(Resultado, id=resultado_id)
-    actividad = get_object_or_404(Actividad, id=actividad_id)
-
-    if request.method == 'POST':
-        cumplida = request.POST['cumplida']
-        cumplido = actividad.cumplido_set.create(cumplida=cumplida)
-        cumplido.save()
-        return redirect('ver_actividad', resultado_id=resultado.id)
-    
-    return render(request, 'main/tiempo/cumplida/cumplida.html', {'actividad': actividad, 'resultado': resultado})
-
-@login_required(login_url='user_login')
-def crear_proceso(request, resultado_id, actividad_id):
-    resultado = get_object_or_404(Resultado, id=resultado_id)
-    actividad = get_object_or_404(Actividad, id=actividad_id)
-
-    if request.method == 'POST':
-        proceso = request.POST['proceso']
-        tiempo = actividad.proceso_set.create(proceso=proceso)
-        tiempo.save()
-        return redirect('ver_actividad', resultado_id=resultado.id)
-    
-    return render(request, 'main/tiempo/proceso/proceso.html', {'actividad': actividad, 'resultado': resultado})
-
-@login_required(login_url='user_login')
-def crear_urgente(request, resultado_id, actividad_id):
-    resultado = get_object_or_404(Resultado, id=resultado_id)
-    actividad = get_object_or_404(Actividad, id=actividad_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
 
     if request.method == 'POST':
         urgente = request.POST['urgente']
         tiempo = actividad.urgente_set.create(urgente=urgente)
         tiempo.save()
-        return redirect('ver_actividad', resultado_id=resultado.id)
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado.id)
     
-    return render(request, 'main/tiempo/urgente/urgente.html', {'actividad': actividad, 'resultado': resultado})
+    return render(request, 'main/tiempo/urgente/urgente.html', {'actividad': actividad, 'resultado': resultado, 'proyecto': proyecto})
 
+#! En proceso - Análisis tiempo
+@login_required(login_url='user_login')
+def eliminar_proceso(request, resultado_id, actividad_id, id, proyecto_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    proceso = get_object_or_404(Proceso, id=id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
+    if request.method == 'POST':
+        proceso.delete()
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado_id)
+    
+    return render(request, 'main/tiempo/proceso/eliminar-proceso.html', {'proceso': proceso, 'resultado': resultado, ' resultado_id': resultado_id, 'proyecto': proyecto})
 
 @login_required(login_url='user_login')
-def guardar_seccion(request, resultado_id, actividad_id):
+def editar_proceso(request, resultado_id, actividad_id, id, proyecto_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    proceso = get_object_or_404(Proceso, id=id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
+    if request.method == 'POST':
+        proceso.proceso = request.POST.get('proceso')
+        proceso.save()
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado_id,)
+    
+    return render(request, 'main/tiempo/proceso/editar-proceso.html', {'proceso': proceso, 'resultado': resultado, 'proyecto': proyecto})
+
+@login_required(login_url='user_login')
+def crear_proceso(request, resultado_id, actividad_id, proyecto_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    actividad = get_object_or_404(Actividad, id=actividad_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
+    if request.method == 'POST':
+        proceso = request.POST['proceso']
+        tiempo = actividad.proceso_set.create(proceso=proceso)
+        tiempo.save()
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado.id)
+    
+    return render(request, 'main/tiempo/proceso/proceso.html', {'actividad': actividad, 'resultado': resultado, 'proyecto': proyecto})
+
+#! Cumplida - Análisis tiempo
+@login_required(login_url='user_login')
+def eliminar_cumplida(request, resultado_id, actividad_id, id, proyecto_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    cumplido = get_object_or_404(Cumplido, id=id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
+    if request.method == 'POST':
+        cumplido.delete()
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado_id)
+    
+    return render(request, 'main/tiempo/cumplida/eliminar-cumplida.html', {'cumplido': cumplido, 'resultado': resultado, ' resultado_id': resultado_id, 'proyecto': proyecto,})
+
+@login_required(login_url='user_login')
+def editar_cumplida(request, resultado_id, actividad_id, id, proyecto_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    cumplido = get_object_or_404(Cumplido, id=id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
+    if request.method == 'POST':
+        cumplido.cumplida = request.POST.get('cumplida')
+        cumplido.save()
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado_id,)
+    
+    return render(request, 'main/tiempo/cumplida/editar-cumplida.html', {'cumplido': cumplido, 'resultado': resultado, 'proyecto': proyecto,})
+
+@login_required(login_url='user_login')
+def crear_cumplida(request, resultado_id, actividad_id, proyecto_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    actividad = get_object_or_404(Actividad, id=actividad_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
+    if request.method == 'POST':
+        cumplida = request.POST['cumplida']
+        cumplido = actividad.cumplido_set.create(cumplida=cumplida)
+        cumplido.save()
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado.id)
+    
+    return render(request, 'main/tiempo/cumplida/cumplida.html', {'actividad': actividad, 'resultado': resultado, 'proyecto': proyecto,})
+
+#! Alternativa
+@login_required(login_url='user_login')
+def eliminar_alternativa(request, resultado_id, actividad_id, dificultad_id, id, proyecto_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    alternativa = get_object_or_404(Alternativa, id=id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
+    if request.method == 'POST':
+        alternativa.delete()
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado_id)
+    
+    return render(request, 'main/alternativa/eliminar_alternativa.html', {'alternativa': alternativa, 'resultado': resultado, 'resultado_id': resultado_id, 'proyecto': proyecto,})
+
+@login_required(login_url='user_login')
+def editar_alternativa(request, resultado_id, actividad_id, dificultad_id, id, proyecto_id):
+    alternativa = get_object_or_404(Alternativa, id=id)
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
+    if request.method == 'POST':
+        alternativa.contenido = request.POST.get('contenido')
+        alternativa.save()
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado_id)
+
+    return render(request, 'main/alternativa/editar_alternativa.html', {'alternativa': alternativa, 'resultado': resultado, 'proyecto': proyecto,})
+
+@login_required(login_url='user_login')
+def crear_alternativa(request, resultado_id, actividad_id, dificultad_id, proyecto_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    actividad = get_object_or_404(Actividad, id=actividad_id)
+    dificultad = get_object_or_404(Dificultad, id=dificultad_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
+    if request.method == 'POST':
+        contenido = request.POST['contenido']
+        alternativa = dificultad.alternativa_set.create(contenido=contenido)
+        alternativa.save()
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado.id)
+    
+    return render(request, 'main/alternativa/crear_alternativa.html', {'actividad': actividad, 'resultado': resultado, 'proyecto': proyecto,})
+
+#! Dificultad
+@login_required(login_url='user_login')
+def eliminar_dificultad(request, resultado_id, actividad_id, id, proyecto_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    dificultad = get_object_or_404(Dificultad, id=id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
+    if request.method == 'POST':
+        dificultad.delete()
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado_id)
+    
+    return render(request, 'main/dificultad/eliminar_dificultad.html', {'dificultad': dificultad, 'resultado':resultado, 'resultado_id': resultado_id, 'proyecto': proyecto,})
+
+@login_required(login_url='user_login')
+def editar_dificultad(request, resultado_id, actividad_id, id, proyecto_id):
+    dificultad = get_object_or_404(Dificultad, id=id)
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
+    if request.method == 'POST':
+        dificultad.contenido = request.POST.get('contenido')
+        dificultad.save()
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado_id,)
+    
+    return render(request, 'main/dificultad/editar_dificultad.html', {'dificultad': dificultad, 'resultado': resultado, 'proyecto': proyecto})
+
+@login_required(login_url='user_login')
+def crear_dificultad(request, resultado_id, actividad_id, proyecto_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    actividad = get_object_or_404(Actividad, id=actividad_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
+    if request.method == 'POST':
+        contenido = request.POST['contenido']
+        dificultad = actividad.dificultad_set.create(contenido=contenido)
+        dificultad.save()
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado.id)
+    
+    return render(request, 'main/dificultad/crear_dificultad.html', {'actividad': actividad, 'resultado': resultado, 'proyecto': proyecto,})
+
+#! Avance
+@login_required(login_url='user_login')
+def eliminar_avance(request, resultado_id, actividad_id, id, proyecto_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    avance = get_object_or_404(Avance, id=id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
+    if request.method == 'POST':
+        avance.delete()
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado_id)
+    
+    return render(request, 'main/avance/eliminar_avance.html', {'avance': avance, 'resultado': resultado, ' resultado_id': resultado_id, 'proyecto': proyecto,})
+
+@login_required(login_url='user_login')
+def editar_avance(request, resultado_id, actividad_id, id, proyecto_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    avance = get_object_or_404(Avance, id=id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+    
+    if request.method == 'POST':
+        avance.contenido = request.POST.get('contenido')
+        avance.save()
+        return redirect('ver_actividad',  proyecto_id=proyecto.id, resultado_id=resultado_id,)
+    
+    return render(request, 'main/avance/editar_avance.html', {'avance': avance, 'resultado': resultado, 'proyecto': proyecto})
+
+@login_required(login_url='user_login')
+def crear_avance(request, resultado_id, actividad_id, proyecto_id):
+    resultado = get_object_or_404(Resultado, id=resultado_id)
+    actividad = get_object_or_404(Actividad, id=actividad_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
+    if request.method == 'POST':
+        contenido = request.POST['contenido']
+        avance = actividad.avance_set.create(contenido=contenido)
+        avance.save()
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado.id)
+    
+    return render(request, 'main/avance/crear_avance.html', {'actividad': actividad, 'resultado': resultado, 'proyecto': proyecto,})
+
+#! Seccion
+@login_required(login_url='user_login')
+def guardar_seccion(request, resultado_id, actividad_id, proyecto_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
     actividad = get_object_or_404(Actividad, id=actividad_id)
     if request.method == 'POST':
@@ -358,12 +383,14 @@ def guardar_seccion(request, resultado_id, actividad_id):
                 except Seccion.DoesNotExist:
                     pass
 
-    return redirect('ver_secciones', resultado_id=resultado_id, actividad_id=actividad_id)
+    return redirect('ver_secciones', proyecto_id=proyecto_id, resultado_id=resultado_id, actividad_id=actividad_id)
 
 @login_required(login_url='user_login')
-def ver_secciones(request, resultado_id, actividad_id):
+def ver_secciones(request, resultado_id, actividad_id, proyecto_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
     actividad = get_object_or_404(Actividad, id=actividad_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
     secciones = actividad.seccion_set.all()
     total_secciones = secciones.count()
     secciones_terminadas = Seccion.objects.filter(actividad=actividad)
@@ -427,24 +454,26 @@ def ver_secciones(request, resultado_id, actividad_id):
         variables = 0
 
     
-    return render(request, 'main/secciones/ver_secciones.html', {'resultado': resultado, 'actividad': actividad, 'secciones': secciones, 'actividad_id': actividad_id, 'total_secciones': total_secciones, 'secciones_completadas': secciones_completadas, 'porcentaje': porcentaje, 'resultado_id': resultado_id, 'total_porcentaje': total_porcentaje, 'actividad_actual': actividad_actual, 'tiempo_real': tiempo_real, 'mensaje': mensaje, 'variables': variables, 'current_datetime': current_datetime, 'secciones_terminadas': secciones_terminadas, 'horas_restantes': horas_restantes,})
+    return render(request, 'main/secciones/ver_secciones.html', {'resultado': resultado, 'actividad': actividad, 'secciones': secciones, 'actividad_id': actividad_id, 'total_secciones': total_secciones, 'secciones_completadas': secciones_completadas, 'porcentaje': porcentaje, 'resultado_id': resultado_id, 'total_porcentaje': total_porcentaje, 'actividad_actual': actividad_actual, 'tiempo_real': tiempo_real, 'mensaje': mensaje, 'variables': variables, 'current_datetime': current_datetime, 'secciones_terminadas': secciones_terminadas, 'horas_restantes': horas_restantes, 'proyecto': proyecto})
 
 @login_required(login_url='user_login')
-def eliminar_secciones(request, resultado_id, actividad_id, id):
+def eliminar_secciones(request, resultado_id, actividad_id, id, proyecto_id):
     seccion = get_object_or_404(Seccion, id=id)
     resultado = get_object_or_404(Resultado, id=resultado_id)
     actividad = get_object_or_404(Actividad, id=actividad_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
 
     if request.method == 'POST':
         seccion.delete()
-        return redirect('ver_secciones', resultado_id=resultado_id, actividad_id=actividad_id)
+        return redirect('ver_secciones', proyecto_id=proyecto.id, resultado_id=resultado_id, actividad_id=actividad_id)
 
-    return render(request, 'main/secciones/eliminar_secciones.html', {'seccion': seccion, 'resultado': resultado, 'actividad_id': actividad_id})
+    return render(request, 'main/secciones/eliminar_secciones.html', {'seccion': seccion, 'resultado': resultado, 'actividad_id': actividad_id, 'proyecto': proyecto})
 
 @login_required(login_url='user_login')
-def editar_secciones(request, resultado_id, actividad_id, id):
+def editar_secciones(request, resultado_id, actividad_id, id, proyecto_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
     seccion = get_object_or_404(Seccion, id=id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
 
     if request.method == 'POST':
         seccion.nombre = request.POST.get('nombre')
@@ -452,14 +481,15 @@ def editar_secciones(request, resultado_id, actividad_id, id):
         seccion.avance = request.POST.get('avance')
         seccion.fecha_vencimiento_seccion = request.POST.get('fecha_vencimiento_seccion')
         seccion.save()
-        return redirect('ver_secciones', resultado_id=resultado_id, actividad_id=actividad_id)
+        return redirect('ver_secciones', proyecto_id=proyecto.id, resultado_id=resultado_id, actividad_id=actividad_id)
 
-    return render(request, 'main/secciones/editar_secciones.html', {'seccion': seccion, 'resultado': resultado, 'actividad_id': actividad_id})
+    return render(request, 'main/secciones/editar_secciones.html', {'seccion': seccion, 'resultado': resultado, 'actividad_id': actividad_id, 'proyecto': proyecto})
 
 @login_required(login_url='user_login')
-def crear_secciones(request, resultado_id, actividad_id):
+def crear_secciones(request, resultado_id, actividad_id, proyecto_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
     actividad = get_object_or_404(Actividad, id=actividad_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
 
     if request.method == 'POST':
         nombre = request.POST['nombre']
@@ -474,23 +504,27 @@ def crear_secciones(request, resultado_id, actividad_id):
             fecha_vencimiento_seccion=fecha_vencimiento_seccion
             )
         seccion.save()
-        return redirect('ver_secciones', resultado_id=resultado_id, actividad_id=actividad_id)
+        return redirect('ver_secciones', proyecto_id=proyecto.id, resultado_id=resultado_id, actividad_id=actividad_id)
 
-    return render(request, 'main/secciones/crear_secciones.html', {'actividad': actividad, 'resultado': resultado, 'actividad_id': actividad_id})
+    return render(request, 'main/secciones/crear_secciones.html', {'actividad': actividad, 'resultado': resultado, 'actividad_id': actividad_id, 'proyecto': proyecto})
 
+#! Actividad
 @login_required(login_url='user_login')
-def eliminra_actividad(request, resultado_id, actividad_id):
+def eliminra_actividad(request, resultado_id, actividad_id, proyecto_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
     actividad = get_object_or_404(Actividad, id=actividad_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
     if request.method == 'POST':
         actividad.delete()
-        return redirect('ver_actividad', resultado_id=resultado.id)
-    return render(request, 'main/actividad/eliminar_actividad.html', {'actividad': actividad, 'resultado': resultado,})
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado.id)
+    return render(request, 'main/actividad/eliminar_actividad.html', {'actividad': actividad, 'resultado': resultado, 'proyecto': proyecto,})
 
-@login_required(login_url='user_login')
-def editar_actividad(request, resultado_id, actividad_id):
+@login_required(login_url='puruser_login')
+def editar_actividad(request, resultado_id, actividad_id, proyecto_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
     actividad = get_object_or_404(Actividad, id=actividad_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
 
     if request.method == 'POST':
         actividad.nombre = request.POST.get('nombre')
@@ -499,13 +533,15 @@ def editar_actividad(request, resultado_id, actividad_id):
         actividad.fecha_vencimiento = timezone.make_aware(datetime.strptime(fecha_vencimiento, '%Y-%m-%dT%H:%M'))
         actividad.save()
         
-        return redirect('ver_actividad', resultado_id=resultado.id)
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado.id)
     
-    return render(request, 'main/actividad/editar_actividad.html', {'actividad': actividad, 'resultado': resultado})
+    return render(request, 'main/actividad/editar_actividad.html', {'actividad': actividad, 'resultado': resultado, 'proyecto': proyecto})
 
 @login_required(login_url='user_login')
-def crear_actividad(request, resultado_id):
+def crear_actividad(request, resultado_id, proyecto_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+    
 
     if request.method == 'POST':
         nombre = request.POST['nombre']
@@ -519,54 +555,60 @@ def crear_actividad(request, resultado_id):
             fecha_actual=timezone.now()
         )
         actividad.save()
-        return redirect('ver_actividad', resultado_id=resultado.id)
+        return redirect('ver_actividad', proyecto_id=proyecto.id, resultado_id=resultado.id)
     
-    return render(request, 'main/actividad/crear_actividad.html', {'resultado': resultado})
+    return render(request, 'main/actividad/crear_actividad.html', {'resultado': resultado, 'proyecto': proyecto,})
 
 @login_required(login_url='user_login')
-def ver_actividad(request, resultado_id):
+def ver_actividad(request, resultado_id, proyecto_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
     actividades = resultado.actividad_set.all()
 
     current_datetime = timezone.now()
 
-    return render(request, 'main/actividad/ver_actividad.html', {'resultado': resultado, 'actividades': actividades, 'current_datetime': current_datetime,})
+    return render(request, 'main/actividad/ver_actividad.html', {'resultado': resultado, 'actividades': actividades, 'current_datetime': current_datetime, 'proyecto': proyecto,})
 
+#! Resultado
 @login_required(login_url='user_login')
-def eliminar_resultado(request, resultado_id):
+def eliminar_resultado(request, resultado_id, proyecto_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
     if request.method == 'POST':
         resultado.delete()
-        return redirect('home')
-    return render(request, 'main/resultado/eliminar_resultado.html', {'resultado': resultado})
+        return redirect('ver_resultados', proyecto_id=proyecto.id)
+    return render(request, 'main/resultado/eliminar_resultado.html', {'resultado': resultado, 'proyecto': proyecto})
 
 @login_required(login_url='user_login')
-def modificar_resultado(request, resultado_id):
+def modificar_resultado(request, resultado_id, proyecto_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
     if request.method == 'POST':
         resultado.nombre = request.POST.get('nombre')
         resultado.texto = request.POST.get('texto')
         resultado.save()
-        return redirect('home')
-    return render(request, 'main/resultado/modificar_resultado.html', {'resultado': resultado})
+        return redirect('ver_resultados', proyecto_id=proyecto.id)
+    return render(request, 'main/resultado/modificar_resultado.html', {'resultado': resultado, 'proyecto': proyecto,})
 
 @login_required(login_url='user_login')
-def crear_resultado(request):
+def crear_resultado(request, proyecto_id):
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
     fecha_actual = timezone.now()
+
     if request.method == 'POST':
-        form = ResultadoForm(request.POST)
-        if form.is_valid():
-            resultado = form.save()
-            return redirect('home')
-    else:
-        form = ResultadoForm
+        nombre = request.POST['nombre']
+        texto = request.POST['texto']
 
-    return render(request, 'main/resultado/crear_resultado.html', {'form': form, 'fecha_actual': fecha_actual,})
+        resultado = Resultado.objects.create(proyecto=proyecto, nombre=nombre, texto=texto)
+        return redirect('ver_resultados', proyecto_id=proyecto.id)
+    
+    return render(request, 'main/resultado/crear_resultado.html', {'fecha_actual': fecha_actual, 'proyecto': proyecto})
 
-# @login_required(login_url='/login/?next=/')
 @login_required(login_url='user_login')
-def home(request):
-    resultados = Resultado.objects.all()
+def ver_resultados(request, proyecto_id):
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+    resultados = proyecto.resultados.all()
     total_promedio = 0
     cantidad_resultados = 0
     
@@ -594,7 +636,46 @@ def home(request):
         promedio_total = round(total_promedio / cantidad_resultados)
     else:
         promedio_total = 0
-    return render(request, 'main/resultado/home.html', {'resultados':resultados, 'promedio_total':promedio_total})
+    return render(request, 'main/resultado/resultado2.html', {'proyecto': proyecto, 'resultados': resultados, 'promedio_total':promedio_total})
+
+#! Proyecto
+@login_required(login_url='user_login')
+def eliminar_proyecto(request, proyecto_id):
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
+    if request.method == 'POST':
+        proyecto.delete()
+        return redirect('home')
+
+    return render(request, 'main/proyecto/eliminar_proyecto.html', {'proyecto': proyecto,})
+
+@login_required(login_url='user_login')
+def editar_proyecto(request, proyecto_id):
+    proyecto = get_object_or_404(Proyecto, id=proyecto_id)
+
+    if request.method == 'POST':
+        proyecto.nombre = request.POST.get('nombre')
+        proyecto.save()
+        return redirect('home')
+
+    return render(request, 'main/proyecto/editar_proyecto.html', {'proyecto': proyecto,})
+
+@login_required(login_url='user_login')
+def crear_proyecto(request):
+    
+    if request.method == 'POST':
+        nombre = request.POST['nombre']
+        proyecto = Proyecto.objects.create(user=request.user, nombre=nombre)
+        return redirect('home')
+
+    return render(request, 'main/proyecto/crear_proyecto.html')
+
+@login_required(login_url='user_login')
+def home(request):
+    # Filtra los proyectos del usuario actual
+    proyectos_del_usuario = Proyecto.objects.filter(user=request.user)
+
+    return render(request, 'main/proyecto/home.html', {'proyectos': proyectos_del_usuario})
 
 @login_required(login_url='user_login')
 def index(request):

@@ -7,6 +7,7 @@
 .container__header {
   display: flex;
 }
+
 .container__header h2 {
   flex-grow: 2;
   font-weight: bold;
@@ -48,8 +49,14 @@
   font-size: 20px;
 }
 .formulario_area {
-  height: 170px;
+  height: 16rem;
 }
+@media (width > 1366px) {
+  .formulario_area {
+    height: 28rem;
+  } 
+}
+
 .imagen__editar {
   width: 20px;
   height: 20px;
@@ -108,6 +115,7 @@
   background-color: darkorange;
   transform: scale(0.95);
 }
+
 @media (max-width:767px) {
   .container__header {
     flex-direction: column; 
@@ -125,8 +133,61 @@
   .boton__grande {
     width: 100%;
   }
+  
 }
+
+@media (width < 455px){
+  .card__titulo-h3 {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  .card__titulo-p {
+    font-size: 1.1rem;
+    font-weight: 800;
+  }
+  .tiempo__titulo {
+    font-size: 1.4rem;
+  }
+}
+
+.botones__resultado {
+  display: flex;
+  justify-content: space-between;
+}
+.botones__resultado-child {
+  display: flex;
+  justify-content: space-between;
+}
+.botones__proyecto {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.progreso__texto {
+  text-align: justify;
+}
+.progreso__texto-actividad {
+  text-align: center;
+}
+
+.contenedor__boton-all {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.contenedor__boton-guardar {
+  width: 20rem;
+  margin-bottom: 0.5rem;
+}
+
 @media (max-width:328px) {
+  .botones__resultado {
+    display: flex;
+    flex-direction: column; 
+  }
+  .volver-resultado {
+    margin-top: 1rem;
+  }
   .container__header__button {
     flex-direction: column;
   }
@@ -136,6 +197,13 @@
   .container__buttons a:last-child {
     margin: 10px 0 10px 0;
   }
+  .contenedor__boton-guardar {
+    max-width: 100%;
+  }
+}
+
+@media (width < 360px){
+
 }
 
 .contenedor-boton-salir {
@@ -161,6 +229,13 @@
   margin-right: 5px;
 }
 .custom-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.contenedor__no-resultados {
   position: absolute;
   top: 50%;
   left: 50%;

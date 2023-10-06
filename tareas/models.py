@@ -1,7 +1,16 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
+
+class Proyecto(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Usuario')
+    nombre = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nombre
 
 class Resultado(models.Model):
+    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE, related_name='resultados')
     nombre = models.CharField(max_length=255)
     texto = models.TextField()
     fecha = models.DateTimeField(default=timezone.now, editable=False)

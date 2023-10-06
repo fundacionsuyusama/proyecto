@@ -47,7 +47,7 @@
         <form method="post">
           {% csrf_token %}
           <button type="submit" class="btn btn-danger">Eliminar</button>
-          <a href="{% url 'ver_actividad' resultado_id=resultado.id %}" class="btn btn-secondary">Volver</a>
+          <a href="{% url 'ver_actividad' proyecto_id=proyecto.id resultado_id=resultado.id %}" class="btn btn-secondary">Volver</a>
         </form>
       </div>
     </div>

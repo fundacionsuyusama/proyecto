@@ -40,14 +40,13 @@
 
   <main>
     <div class="container">
-      <h1 class="text-center">Eliminar sección</h1>
+      <h1 class="text-center ">Eliminar Proyecto</h1>
       <div class="text-center form-box">
-        <p>¿Estás seguro de que deseas eliminar "{{ seccion.nombre }}"?</p>
-        <p>{{ seccion.contenido }}</p>
+        <p>¿Estás seguro de que deseas eliminar "{{ proyecto.nombre }}"?</p>
         <form method="post">
           {% csrf_token %}
           <button type="submit" class="btn btn-danger">Eliminar</button>
-          <a href="{% url 'ver_secciones' proyecto_id=proyecto.id resultado_id=resultado.id actividad_id=actividad_id %}" class="btn btn-secondary">Volver</a>
+          <a href="{% url 'home' %}" class="btn btn-secondary">Volver</a>
         </form>
       </div>
     </div>

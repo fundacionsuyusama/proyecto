@@ -1,0 +1,52 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block content %}
+
+    <div class="container">
+      <div class="mt-4 mb-4 botones__proyecto">
+        <a href="{% url "crear_proyecto" %}" class="btn btn-dark">Crear proyecto</a>
+      </div>
+      {% for proyecto in proyectos %}
+        <div class="card mb-4">
+            <div class="card-body">
+              <h2 class="card-title"><a href="{% url 'ver_resultados' proyecto.id %}" class="link-offset-2 link-underline link-underline-opacity-0 text-secondary-emphasis font-monospace fst-italic">{{ proyecto.nombre }}</a></h2>
+            </div>
+            <div class="card-footer">
+              <div>
+                <a href="{% url "editar_proyecto" proyecto.id %}" class="btn btn-secondary">Editar</a>
+                <a href="{% url "eliminar_proyecto" proyecto.id %}" class="btn btn-danger">Eliminar</a>
+              </div>
+            </div>
+          </div>
+          
+        {% empty %}
+        <div class="col-12 contenedor__no-resultados">
+          <div class="jumbotron text-center">
+            <h1 class="display-4">No hay proyectos registrados</h1>
+            <p class="lead">No se ha encontrado ningún proyecto en este momento.</p>
+          </div>
+        </div>
+        {% endfor %}
+    </div>
+
+
+{% endblock  %}
+
+
+{% comment %} 
+<ul>
+        {% for proyecto in proyectos %}
+            <li>{{ proyecto.nombre }}</li>
+            <a href="{% url 'ver_resultados' proyecto.id %}">Ver Proyecto</a>
+            <a href="{% url "editar_proyecto" proyecto.id %}">Editar  proyecto</a>
+            <a href="{% url "eliminar_proyecto" proyecto.id %}">Eliminar proyecto</a>
+            <br/><br/>
+        {% empty %}
+        <h1>No hay proyectos registrados</h2>
+        
+        {% endfor %}
+    </ul>
+{% endcomment %}
+

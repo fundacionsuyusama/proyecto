@@ -14,8 +14,15 @@
   }
 </style>
 
+<div class="container mt-3">
+  <div class="card">
+    <div class="card-header text-center">
+      <h3 class="fst-italic mt-2 font-monospace">Editar Resultado</h3>
+    </div>
+  </div>
+</div>
+
 <div class="container mt-2">
-  <h2>Registro Resultados</h2>
   <form method="post" class="mt-2 mb-2">
     {% csrf_token %}
     <div class="mb-3">
@@ -23,15 +30,15 @@
       <input type="text" class="form-control" id="exampleFormControlInput1" name="nombre" value="{{ resultado.nombre }}">
     </div>
     <div class="mb-3">
-      <label for="exampleFormControlTextarea1" class="form-label">Texto del Resultado</label>
+      <label for="exampleFormControlTextarea1" class="form-label">Contenido del Resultado</label>
       <textarea class="form-control formulario_area" id="exampleFormControlTextarea1" name="texto" placeholder="Maximo 300 caracteres">{{ resultado.texto }}</textarea>
     </div>
     <div class="mb-3 contenedor-fecha-resultado">
       <label for="">{{ fecha_actual }}</label>
     </div>
-    <div class="d-grid gap-2 col-3 mx-auto contenedor_botones mb-3">
-      <button type="submit" class="btn btn-primary">Guardar</button>
-      <a href="{% url 'home' %}" role="button" class="btn btn-secondary">Volver</a>
+    <div class="contenedor__boton-all mb-3">
+      <button type="submit" class="btn btn-primary contenedor__boton-guardar">Guardar</button>
+      <a href="{% url 'ver_resultados' proyecto_id=proyecto.id %}" role="button" class="btn btn-secondary contenedor__boton-guardar">Volver</a>
     </div>
   </form>
 </div>
