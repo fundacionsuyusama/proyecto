@@ -4,14 +4,14 @@ from django.contrib.auth.models import User
 
 class Proyecto(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Usuario')
-    nombre = models.CharField(max_length=255)
+    nombre = models.TextField()
 
     def __str__(self):
         return self.nombre
 
 class Resultado(models.Model):
     proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE, related_name='resultados')
-    nombre = models.CharField(max_length=255)
+    nombre = models.TextField()
     texto = models.TextField()
     fecha = models.DateTimeField(default=timezone.now, editable=False)
     promedio_avance = models.FloatField(default=0)
@@ -21,7 +21,7 @@ class Resultado(models.Model):
 
 class Actividad(models.Model):
     resultado = models.ForeignKey(Resultado, on_delete=models.CASCADE)
-    nombre = models.CharField(max_length=255)
+    nombre = models.TextField()
     contenido = models.TextField()
     is_completed = models.BooleanField(default=False)
     fecha_vencimiento = models.DateTimeField(null=True, blank=True)

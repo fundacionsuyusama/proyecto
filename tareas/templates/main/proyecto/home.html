@@ -11,7 +11,7 @@
       {% for proyecto in proyectos %}
         <div class="card mb-4">
             <div class="card-body">
-              <h2 class="card-title"><a href="{% url 'ver_resultados' proyecto.id %}" class="link-offset-2 link-underline link-underline-opacity-0 text-secondary-emphasis font-monospace fst-italic">{{ proyecto.nombre }}</a></h2>
+              <h2 class="card-title progreso__texto"><a href="{% url 'ver_resultados' proyecto.id %}" class="link-offset-2 link-underline link-underline-opacity-0 text-secondary-emphasis font-monospace fst-italic">{{ proyecto.nombre }}</a></h2>
             </div>
             <div class="card-footer">
               <div>
