@@ -8,6 +8,8 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 from django.http import HttpResponse
 import openpyxl
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Font
 from django.contrib.auth.models import User
 
 @login_required(login_url='user_login')
@@ -48,80 +50,138 @@ def exportar_datos(request):
     variable = "Hola desde exportar"
     return render(request, 'main/herramientas/exportar.html')
 
+
 @login_required(login_url='user_login')
 def exportar(request):
-    resultados = Resultado.objects.prefetch_related(
-        'actividad_set__seccion_set',
-        'actividad_set__dificultad_set__alternativa_set'
-    ).all()
+    # Obtén el usuario actual
+    usuario_actual = request.user
 
-    # Crear un nuevo archivo de Excel
+    # Crea un nuevo libro de Excel
     wb = openpyxl.Workbook()
-    sheet = wb.active
+    ws = wb.active
+    ws.title = "Proyectos"
 
-    # Escribir encabezados de columna
-    sheet['A1'] = 'Nombre de Resultado'
-    sheet['B1'] = 'Contenido de Resultado'
-    sheet['C1'] = 'Nombre de Actividad'
-    sheet['D1'] = 'Contenido Actividad'
-    sheet['E1'] = 'Avance'
-    sheet['F1'] = 'Dificultad'
-    sheet['G1'] = 'Alternativa'
-    sheet['H1'] = 'Nombre de Sección'
-    sheet['I1'] = 'Contenido de Sección'
+    # Definir la lista de campos que deseas exportar
+    campos_exportar = [
+        'Nombre del Proyecto', 'Nombre del Resultado', 'Texto del Resultado',
+        'Nombre de la Actividad', 'Contenido de la Actividad', 'Fecha de Vencimiento de la Actividad',
+        'Contenido del Avance', 'Cumplido', 'Proceso', 'Urgente',
+        'Contenido de la Dificultad', 'Contenido de la Alternativa',
+        'Nombre de la Seccion', 'Contenido de la Seccion', 'Avance de la Seccion'
+    ]
 
-    # Escribir los datos de los modelos
+    for col_num, encabezado in enumerate(campos_exportar, 1):
+        col_letra = get_column_letter(col_num)
+        ws[f'{col_letra}1'] = encabezado
+
+    # Aplica formato a los encabezados
+    for cell in ws['1:1']:
+        cell.font = Font(bold=True)
+
+    # Obtiene los proyectos del usuario actual
+    proyectos = Proyecto.objects.filter(user=usuario_actual)
+
     row_num = 2
-    for resultado in resultados:
-        actividades = resultado.actividad_set.all()
-        if actividades.exists():
-            for actividad in actividades:
-                avance = actividad.avance_set.first().contenido if actividad.avance_set.exists() else ''
-                dificultad = actividad.dificultad_set.first().contenido if actividad.dificultad_set.exists() else ''
-                alternativa = actividad.dificultad_set.first().alternativa_set.first().contenido if actividad.dificultad_set.exists() and actividad.dificultad_set.first().alternativa_set.exists() else ''
-                secciones = actividad.seccion_set.all()
-                if secciones.exists():
-                    for seccion in secciones:
-                        sheet[f'A{row_num}'] = resultado.nombre
-                        sheet[f'B{row_num}'] = resultado.texto
-                        sheet[f'C{row_num}'] = actividad.nombre
-                        sheet[f'D{row_num}'] = actividad.contenido
-                        sheet[f'E{row_num}'] = avance
-                        sheet[f'F{row_num}'] = dificultad
-                        sheet[f'G{row_num}'] = alternativa
-                        sheet[f'H{row_num}'] = seccion.nombre
-                        sheet[f'I{row_num}'] = seccion.contenido
+    for proyecto in proyectos:
+        # Agrega el nombre del proyecto
+        ws.cell(row=row_num, column=1, value=proyecto.nombre)
+
+        resultados = Resultado.objects.filter(proyecto=proyecto)
+
+        if resultados.exists():
+            for resultado in resultados:
+                ws.cell(row=row_num, column=2, value=resultado.nombre)
+                ws.cell(row=row_num, column=3, value=resultado.texto)
+                row_num += 1
+
+                actividades = Actividad.objects.filter(resultado=resultado)
+
+                for actividad in actividades:
+                    ws.cell(row=row_num, column=4, value=actividad.nombre)
+                    ws.cell(row=row_num, column=5, value=actividad.contenido)
+
+                    fecha_vencimiento = actividad.fecha_vencimiento
+                    if fecha_vencimiento:
+                        fecha_vencimiento = fecha_vencimiento.replace(tzinfo=None)
+                    ws.cell(row=row_num, column=6, value=fecha_vencimiento)
+
+                    # Obtener los avances de la actividad
+                    avances = Avance.objects.filter(actividad=actividad)
+
+                    if avances.exists():
+                        # Recorrer los avances y agregarlos
+                        avances_contenido = ', '.join(str(avance.contenido) for avance in avances)
+                        ws.cell(row=row_num, column=7, value=avances_contenido)
+                    else:
+                        ws.cell(row=row_num, column=7, value="")
+
+                    # Obtener los Cumplidos de la actividad
+                    cumplidos = Cumplido.objects.filter(actividad=actividad)
+                    procesos = Proceso.objects.filter(actividad=actividad)
+                    urgentes = Urgente.objects.filter(actividad=actividad)
+
+                    # Agregar los Cumplidos en celdas separadas
+                    if cumplidos.exists():
+                        cumplidos_contenido = ', '.join(cumplido.cumplida for cumplido in cumplidos)
+                        ws.cell(row=row_num, column=8, value=cumplidos_contenido)
+                    else:
+                        ws.cell(row=row_num, column=8, value="")
+
+                    # Agregar los Procesos en celdas separadas
+                    if procesos.exists():
+                        procesos_contenido = ', '.join(proceso.proceso for proceso in procesos)
+                        ws.cell(row=row_num, column=9, value=procesos_contenido)
+                    else:
+                        ws.cell(row=row_num, column=9, value="")
+
+                    # Agregar los Urgentes en celdas separadas
+                    if urgentes.exists():
+                        urgentes_contenido = ', '.join(urgente.urgente for urgente in urgentes)
+                        ws.cell(row=row_num, column=10, value=urgentes_contenido)
+                    else:
+                        ws.cell(row=row_num, column=10, value="")
+
+                    # Obtener las dificultades de la actividad
+                    dificultades = Dificultad.objects.filter(actividad=actividad)
+                    alternativas = []
+
+                    for dificultad in dificultades:
+                        alternativa = Alternativa.objects.filter(dificultad=dificultad).first()
+                        alternativas.append(alternativa)
+
+                    if dificultades.exists():
+                        # Recorrer las dificultades y agregarlas en celdas separadas
+                        for i, dificultad in enumerate(dificultades):
+                            dificultad_contenido = dificultad.contenido
+                            alternativa_contenido = alternativas[i].contenido if alternativas[i] else ""
+                            ws.cell(row=row_num, column=11, value=dificultad_contenido)
+                            ws.cell(row=row_num, column=12, value=alternativa_contenido)
+                            row_num += 1
+                    else:
+                        ws.cell(row=row_num, column=11, value="")
+                        ws.cell(row=row_num, column=12, value="")
                         row_num += 1
-                else:
-                    sheet[f'A{row_num}'] = resultado.nombre
-                    sheet[f'B{row_num}'] = resultado.texto
-                    sheet[f'C{row_num}'] = actividad.nombre
-                    sheet[f'D{row_num}'] = actividad.contenido
-                    sheet[f'E{row_num}'] = avance
-                    sheet[f'F{row_num}'] = dificultad
-                    sheet[f'G{row_num}'] = alternativa
-                    sheet[f'H{row_num}'] = ''
-                    sheet[f'I{row_num}'] = ''
-                    row_num += 1
+
+                    # Obtener las secciones de la actividad
+                    secciones = Seccion.objects.filter(actividad=actividad)
+
+                    for seccion in secciones:
+                        ws.cell(row=row_num, column=13, value=seccion.nombre)
+                        ws.cell(row=row_num, column=14, value=seccion.contenido)
+                        ws.cell(row=row_num, column=15, value=seccion.avance)
+                        row_num += 1
         else:
-            sheet[f'A{row_num}'] = resultado.nombre
-            sheet[f'B{row_num}'] = ''
-            sheet[f'C{row_num}'] = ''
-            sheet[f'D{row_num}'] = ''
-            sheet[f'E{row_num}'] = ''
-            sheet[f'F{row_num}'] = ''
-            sheet[f'G{row_num}'] = ''
-            sheet[f'H{row_num}'] = ''
-            sheet[f'I{row_num}'] = ''
+            for col_num in range(2, len(campos_exportar) + 1):
+                ws.cell(row=row_num, column=col_num, value="")
             row_num += 1
 
+    # Configura la respuesta HTTP para devolver el archivo Excel
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = f'attachment; filename="{usuario_actual.username}_proyectos.xlsx"'
 
-    # Configurar el nombre del archivo de descarga
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=modelos.xlsx'
-
-    # Guardar el archivo de Excel en la respuesta HTTP
+    # Guarda el libro de Excel en la respuesta
     wb.save(response)
+
     return response
 
 
