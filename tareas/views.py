@@ -623,7 +623,9 @@ def crear_actividad(request, resultado_id, proyecto_id):
 def ver_actividad(request, resultado_id, proyecto_id):
     resultado = get_object_or_404(Resultado, id=resultado_id)
     proyecto = get_object_or_404(Proyecto, id=proyecto_id)
-    actividades = resultado.actividad_set.all()
+    actividades = resultado.actividad_set.all().order_by('id')
+
+    
 
     current_datetime = timezone.now()
 
