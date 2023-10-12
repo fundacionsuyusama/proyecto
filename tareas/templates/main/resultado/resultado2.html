@@ -34,7 +34,7 @@
               <a href="{% url 'eliminar_resultado' resultado_id=resultado.id proyecto_id=proyecto.id %}" class="btn btn-close" aria-label="Close"></a>
             </div>
             <h5 class="card-title bold progreso__texto-actividad font-monospace mb-3 font-monospace fst-italic card__titulo-p">{{ resultado.nombre }}</h5>
-            <p class="card-text progreso__texto">{{ resultado.texto }}</p>
+            <p class="card-text progreso__texto saltos_linea">{{ resultado.texto }}</p>
             <div class="progreso__boton-resultado">
               <a href="{% url 'ver_actividad' proyecto_id=proyecto.id resultado_id=resultado.id %}" class="btn btn-dark progreso__boton-ir">Ir al resultado</a>
             </div>

@@ -31,7 +31,7 @@
             <a href="{% url 'eliminra_actividad' proyecto_id=proyecto.id resultado_id=resultado.id actividad_id=actividad.id %}" role="button" class="btn btn-close" aria-label="Close"></a>
           </div>
           <h5 class="card-title bold progreso__texto-actividad font-monospace mt-1 mb-3 fst-italic card__titulo-p">{{ actividad.nombre }}</h5>
-          <p class="card-text progreso__texto">{{ actividad.contenido }}</p>
+          <p class="card-text progreso__texto saltos_linea">{{ actividad.contenido }}</p>
           <p class="card-text mb-3">Fecha de vencimiento:<br/> {{ actividad.fecha_vencimiento }}</p>
           <div class="contenedor-boton-salir_flex">
             <a href="{% url 'ver_secciones' proyecto_id=proyecto.id resultado_id=resultado.id actividad_id=actividad.id %}" class="enviar" role="button">Ver secciones</a>
@@ -72,9 +72,13 @@
                 <a href="{% url 'eliminar_dificultad' proyecto_id=proyecto.id resultado_id=resultado.id actividad_id=actividad.id id=dificultad.id %}" role="button" class="btn btn-close" aria-label="Close"></a>
               </div>
             </div>
-            <p class="progreso__texto">{{ dificultad.contenido }}</p>
+            <p class="progreso__texto saltos_linea">{{ dificultad.contenido }}</p>
             <div class="contenedor-boton-avance">
+              {% if dificultad.alternativa_set.exists %}
+              
+              {% else %}
               <a href="{% url 'crear_alternativa' proyecto_id=proyecto.id resultado_id=resultado.id actividad_id=actividad.id dificultad_id=dificultad.id %}" role="button" class="btn btn-primary">Crear alternativa</a>
+              {% endif %}
             </div>
           </div>
           <div id="alternativas{{ dificultad.id }}" class="collapse show" aria-labelledby="dificultad{{ dificultad.id }}" data-bs-parent="#dificultadesAccordion">
@@ -87,7 +91,7 @@
                   <a href="{% url 'eliminar_alternativa' proyecto_id=proyecto.id resultado_id=resultado.id actividad_id=actividad.id dificultad_id=dificultad.id id=alternativa.id %}" role="button" class="btn btn-close" aria-label="Close"></a>
                 </div>
               </div>
-              <p class="progreso__texto">{{ alternativa.contenido }}</p>
+              <p class="progreso__texto saltos_linea">{{ alternativa.contenido }}</p>
               {% endfor %}
             </div>
           </div>

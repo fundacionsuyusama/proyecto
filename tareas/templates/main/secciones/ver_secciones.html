@@ -153,7 +153,7 @@
               <input class="form-check-input" type="hidden" id="flexCheckDefault" name="seccion_datos_status_{{ seccion_datos.id }}" value="{% if seccion_datos.is_completed %}completed{% else %}incomplete{% endif %}">
             </div>
             <h5 class="card-title font-monospace fst-italic progreso__texto-actividad mt-2 mb-3 card__titulo-p">{{ seccion_datos.nombre }}</h5>
-            <p class="card-text progreso__texto">{{ seccion_datos.contenido }}</p>
+            <p class="card-text progreso__texto saltos_linea">{{ seccion_datos.contenido }}</p>
             <div class="container__header__button">
               <div class="container__buttons">
                 <a href="{% url 'editar_secciones' proyecto_id=proyecto.id  resultado_id=resultado.id actividad_id=actividad.id id=seccion_datos.id %}" class="btn btn-primary" role="button">Editar</a>

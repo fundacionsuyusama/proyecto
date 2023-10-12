@@ -170,6 +170,10 @@
   text-align: center;
 }
 
+.saltos_linea {
+  white-space: pre-wrap;
+}
+
 .contenedor__boton-all {
   display: flex;
   flex-direction: column;
