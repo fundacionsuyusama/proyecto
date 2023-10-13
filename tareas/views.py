@@ -451,7 +451,7 @@ def ver_secciones(request, resultado_id, actividad_id, proyecto_id):
     actividad = get_object_or_404(Actividad, id=actividad_id)
     proyecto = get_object_or_404(Proyecto, id=proyecto_id)
 
-    secciones = actividad.seccion_set.all()
+    secciones = actividad.seccion_set.all().order_by('id')
     total_secciones = secciones.count()
     secciones_terminadas = Seccion.objects.filter(actividad=actividad)
 
@@ -625,8 +625,6 @@ def ver_actividad(request, resultado_id, proyecto_id):
     proyecto = get_object_or_404(Proyecto, id=proyecto_id)
     actividades = resultado.actividad_set.all().order_by('id')
 
-    
-
     current_datetime = timezone.now()
 
     return render(request, 'main/actividad/ver_actividad.html', {'resultado': resultado, 'actividades': actividades, 'current_datetime': current_datetime, 'proyecto': proyecto,})
@@ -670,7 +668,7 @@ def crear_resultado(request, proyecto_id):
 @login_required(login_url='user_login')
 def ver_resultados(request, proyecto_id):
     proyecto = get_object_or_404(Proyecto, id=proyecto_id)
-    resultados = proyecto.resultados.all()
+    resultados = proyecto.resultados.all().order_by('id')
     total_promedio = 0
     cantidad_resultados = 0
     
@@ -735,7 +733,7 @@ def crear_proyecto(request):
 @login_required(login_url='user_login')
 def home(request):
     # Filtra los proyectos del usuario actual
-    proyectos_del_usuario = Proyecto.objects.filter(user=request.user)
+    proyectos_del_usuario = Proyecto.objects.filter(user=request.user).order_by('id')
 
     return render(request, 'main/proyecto/home.html', {'proyectos': proyectos_del_usuario})
 
