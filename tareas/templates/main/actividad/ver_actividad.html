@@ -27,7 +27,7 @@
       <div class="card mb-3">
         <div class="card-body">
           <div class="botones__resultado-child">
-            <a href="{% url 'editar_actividad' proyecto_id=proyecto.id resultado_id=resultado.id actividad_id=actividad.id %}" role="button"><img src="https://live.staticflickr.com/65535/52970526099_6367029b9d_t.jpg" alt="" class="imagen__editar"></a>
+            <a href="{% url 'editar_actividad' proyecto_id=proyecto.id resultado_id=resultado.id actividad_id=actividad.id %}" class="btn btn-primary" role="button">Editar</a>
             <a href="{% url 'eliminra_actividad' proyecto_id=proyecto.id resultado_id=resultado.id actividad_id=actividad.id %}" role="button" class="btn btn-close" aria-label="Close"></a>
           </div>
           <h5 class="card-title bold progreso__texto-actividad font-monospace mt-1 mb-3 fst-italic card__titulo-p">{{ actividad.nombre }}</h5>
